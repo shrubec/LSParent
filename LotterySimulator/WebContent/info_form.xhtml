@@ -1,0 +1,150 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:simulator="http://java.sun.com/jsf/composite/simulator">
+
+ <h:head>  
+      
+      
+</h:head>  
+
+<h:body>
+
+	<h:form id="mainForm">
+
+		<p:outputPanel id="mainPanel" style="font-size: 75% !important;">
+
+
+		<p:panel header="Osnovno">
+
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+
+				<h:outputText value="Ukupno simulacija"  />
+				<h:inputText id="name" value="#{infoFacade.ukupnoSimulacija}" />
+
+			</h:panelGrid>
+			
+		</p:panel>
+		
+		<p:panel header="Poruke simulatoru" >
+		
+			<h:panelGrid columns="1" columnClasses="label, value" styleClass="grid" style="font-size: 75% !important;">
+	
+				<p:dataTable var="poruka" value="#{infoFacade.porukeInfo}" rows="5" paginatorPosition="bottom"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15" >
+
+						 <p:column headerText="Date" style="font-size: 75% !important;">
+				            <h:outputText value="#{poruka.date}" >
+				            	<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+				            </h:outputText>
+				        </p:column>
+				 
+				         <p:column headerText="Name" style="font-size: 75% !important;">
+				            <h:outputText value="#{poruka.name}" />
+				        </p:column>
+				        
+				        <p:column headerText="Email" style="font-size: 75% !important;">
+				            <h:outputText value="#{poruka.email}" />
+				        </p:column>
+				        
+				        <p:column headerText="Message" style="font-size: 75% !important;">
+				            <h:outputText value="#{poruka.message}" />
+				        </p:column>
+				        
+				  </p:dataTable>
+
+			</h:panelGrid>
+		
+		</p:panel>
+		
+		<p:panel header="Simulacije">
+				
+			<h:panelGrid columns="1" columnClasses="label, value" styleClass="grid" >
+	
+				<p:dataTable var="simulacija" value="#{infoFacade.simulacijeInfo}" rows="10" paginatorPosition="bottom"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15" style="font-size: 75% !important;">
+
+						 <p:column headerText="Date" style="font-size: 75% !important;">
+				            <h:outputText value="#{simulacija.date}" >
+				            	<f:convertDateTime pattern="dd.MM.yyyy" />
+				            </h:outputText>
+				        </p:column>
+				        
+				        
+				 
+				         <p:column headerText="Total" style="font-size: 75% !important;">
+				            <h:outputText value="#{simulacija.total}" />
+				        </p:column>
+				        
+				  </p:dataTable>
+
+			</h:panelGrid>
+		
+		</p:panel>
+		
+		<p:panel header="Simulacije detaljno">
+		
+			<p:dataTable var="simulacija" value="#{infoFacade.simulacijeDetaljno}" rows="15" 
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="10,15,25" >
+
+						 <p:column headerText="ID" style="font-size: 75% !important;">
+				            <h:outputText value="#{simulacija.id}" />
+				        </p:column>
+
+						 <p:column headerText="Start time" style="font-size: 75% !important;" >
+				            <h:outputText value="#{simulacija.startTime}" >
+				            	<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" type="both"/>
+				            </h:outputText>
+				        </p:column>
+				 
+				         <p:column headerText="End time" style="font-size: 75% !important;">
+				            <h:outputText value="#{simulacija.endTime}" >
+				            	<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+				            </h:outputText>
+				        </p:column>
+				        
+				         <p:column headerText="Duration (sek)" style="font-size: 75% !important;">
+				            <h:outputText value="#{simulacija.duration}" />
+				        </p:column>
+				        
+				         <p:column headerText="Type" style="font-size: 75% !important;">
+				            <h:outputText value="#{simulacija.lotteryType}" />
+				        </p:column>
+				        
+				         <p:column headerText="Days" style="font-size: 75% !important;">
+				            <h:outputText value="#{simulacija.selectedDays}" />
+				        </p:column>
+				        
+				        <p:column headerText="Numbers" style="font-size: 75% !important;">
+				            <h:outputText value="#{simulacija.selectedNumbers}" />
+				        </p:column>
+				        
+				         <p:column headerText="Jackpot" style="font-size: 75% !important;">
+				            <h:outputText value="#{simulacija.jackpot}" />
+				        </p:column>
+				        
+				  </p:dataTable>
+		
+		</p:panel>
+		
+			
+			
+
+		</p:outputPanel>
+
+	</h:form>
+
+</h:body>
+
+
+
+
+</html>

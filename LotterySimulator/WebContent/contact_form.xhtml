@@ -1,0 +1,42 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:simulator="http://java.sun.com/jsf/composite/simulator">
+
+
+<h:body>
+
+	<h:form id="mainForm">
+
+		<p:outputPanel id="mainPanel" style="width:700px">
+
+			<p:messages id="messages"  />   
+
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+
+				<h:outputText value="Name:" style="font-size: 75% !important;" />
+				<h:inputText id="name" value="#{kontaktFacade.name}" required="true" requiredMessage="Name is required"/>
+
+				<h:outputText value="Email:" style="font-size: 75% !important;" />
+				<h:inputText id="email" value="#{kontaktFacade.email}" required="true" requiredMessage="Email is required"/>
+
+				<h:outputText value="Message:" style="font-size: 75% !important;" />
+				<h:inputTextarea id="message" value="#{kontaktFacade.message}" required="true" cols="40" rows="5" requiredMessage="Message is required"/>
+
+				<p:commandButton id="button1" value="Send message" update="mainPanel" action="#{kontaktFacade.saveMessage}" style="font-size: 75% !important;"/>
+
+
+			</h:panelGrid>
+
+		</p:outputPanel>
+
+	</h:form>
+
+</h:body>
+
+
+
+
+</html>

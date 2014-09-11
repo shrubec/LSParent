@@ -1,0 +1,37 @@
+
+
+- prevesti tablicu simulacija na engleski, eventualno proširiti tablice
+- dodati podršku za više tipova lota
+- istaknuti trenutno pogoðene brojeve
+- pravilno završiti simulaciju
+- izbaciti pretražiaè sa forme
+- doraditi poruke greške
+- download rezultata simulacije???
+
+- odabrati i zakupiti server, pripremiti okolinu, instalirati aplikaciju
+- testirati aplikaciju
+- prijaviti googleu i prilagoditi aplikaciju googleu
+
+
+
+create table kontakt (
+id int not null auto_increment primary key,
+date datetime not null,
+name varchar(255) not null,
+email varchar(255) not null,
+message varchar(max) not null
+)
+
+
+create table simulacija(
+id int not null auto_increment primary key,
+hash varchar (255) not null,
+date date not null,
+start_time datetime not null,
+end_time datetime,
+duration int,
+type varchar(50) not null,
+days varchar(50) not null,
+numbers varchar (255) not null,
+jackpot bit not null
+)

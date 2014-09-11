@@ -1,0 +1,166 @@
+    <html xmlns="http://www.w3.org/1999/xhtml"  
+        xmlns:h="http://java.sun.com/jsf/html"  
+        xmlns:f="http://java.sun.com/jsf/core"  
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:simulator="http://java.sun.com/jsf/composite/simulator">  
+      
+        <h:head>  
+      
+      		<h:outputScript library="js" name="ajax.js" />
+      
+        </h:head>  
+          
+        <h:body>  
+          
+         <h:form id="mainForm">  
+         
+         
+         <p:outputPanel rendered="#{simulacijaFacade.simulationStarted == false}">
+		
+			<div class="post">
+						<h2 class="title"><a href="#">Welcome to Lottery Simulator 123</a>				</h2>
+						<div class="entry">
+					    <p>Select lottery type, draw days and your lucky numbers in up to 12 tickets, then start simulation to find out your real chances for winning jackpot by simulating lottery drawing every week through decades and centuries.</p>
+					   	<p>Good luck!</p>
+		             </div>
+			</div>
+		
+		</p:outputPanel>
+         
+  
+    <p:growl id="growl" sticky="true" showDetail="true"/>  
+  
+		   <p:outputPanel id="mainPanel" style="width:658px" >  
+		      	<p:poll interval="1"  update="finished" />  
+		
+						 <h:inputHidden id="trenutnaSimulacija" value="#{simulacijaFacade.trenutnaSimulacijaId}" />	
+						<h:inputHidden id="finished" value="#{simulacijaFacade.finished}" />
+						<h:inputHidden id="simulationSpeed" value="#{simulacijaFacade.simulationSpeed}" />  
+	
+		   </p:outputPanel>
+		   
+		     <p:outputPanel id="sliderPanel" style="width:658px"  rendered="#{simulacijaFacade.simulationStarted == true}">  		
+					
+					<p:outputLabel value="Simulation speed"/>
+        			<p:slider for="simulationSpeed" step="10" />  
+                 
+						
+		   </p:outputPanel>
+   
+            <p:outputPanel id="headerPanel" style="width:658px" rendered="#{simulacijaFacade.simulationStarted == false}">  
+
+                <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">  
+                    <h:outputText value="Tip lota: *" style="font-size: 75% !important;"/>  
+
+                    <p:selectOneMenu value="#{simulacijaFacade.simulacija.vrsta}" required="true" requiredMessage="Obavezan unos"  style="width: 150px;font-size: 75% !important;" >
+                                
+		                <f:selectItem itemLabel="Loto 7/39" itemValue="1" ></f:selectItem>
+		                <f:selectItem itemLabel="Loto 6/45" itemValue="2" ></f:selectItem>
+		                <f:selectItem itemLabel="Loto 5/90" itemValue="3" ></f:selectItem>
+		                <f:selectItem itemLabel="Kreiraj vlastiti tip lota" itemValue="10" ></f:selectItem>
+		                
+		                 <p:ajax update="mainForm" listener="#{simulacijaFacade.updateBrojeva}"/>  
+		                                                          
+		            </p:selectOneMenu>        
+                            
+                <h:outputText value="Kombinacija za odigrati: " style="font-size: 75% !important;" /> 
+                   <p:selectOneMenu value="#{simulacijaFacade.kombinacijaZaIspuniti}"   style="width: 50px;font-size: 75% !important;">
+                                
+                        <f:selectItem itemLabel="1" itemValue="1"></f:selectItem>
+                        <f:selectItem itemLabel="2" itemValue="2" ></f:selectItem>
+		                <f:selectItem itemLabel="3" itemValue="3" ></f:selectItem>
+		                <f:selectItem itemLabel="4" itemValue="4" ></f:selectItem>
+                        <f:selectItem itemLabel="5" itemValue="5" ></f:selectItem>
+		                <f:selectItem itemLabel="6" itemValue="6" ></f:selectItem>
+		                <f:selectItem itemLabel="7" itemValue="7" ></f:selectItem>
+		                <f:selectItem itemLabel="8" itemValue="8" ></f:selectItem>
+		                <f:selectItem itemLabel="9" itemValue="9" ></f:selectItem>
+		                <f:selectItem itemLabel="10" itemValue="10" ></f:selectItem>
+		                <f:selectItem itemLabel="11" itemValue="11" ></f:selectItem>
+		                <f:selectItem itemLabel="12" itemValue="12" ></f:selectItem>
+		                
+		                 <p:ajax update="mainForm" listener="#{simulacijaFacade.updateBrojeva}"/> 
+                                         
+		            </p:selectOneMenu>     
+		            
+                   <h:outputText value="Izvlačenje svaki: " style="font-size: 75% !important;"/>  
+                   <p:selectManyCheckbox value="#{simulacijaFacade.simulacija.izvlacenja}" required="true" requiredMessage="Obavezan unos" style="width: 200px;font-size: 75% !important;" >
+                                
+                        <f:selectItem itemLabel="Monday" itemValue="2"></f:selectItem>
+                        <f:selectItem itemLabel="Tuesday" itemValue="3" ></f:selectItem>
+		                <f:selectItem itemLabel="Wednesday" itemValue="4" ></f:selectItem>
+		                <f:selectItem itemLabel="Thursday" itemValue="5" ></f:selectItem>
+                        <f:selectItem itemLabel="Friday" itemValue="6" ></f:selectItem>
+		                <f:selectItem itemLabel="Saturday" itemValue="7" ></f:selectItem>
+		                <f:selectItem itemLabel="Sunday" itemValue="1" ></f:selectItem>
+                                         
+		            </p:selectManyCheckbox>      
+                      
+                     
+                     
+                  
+                      
+                      
+                      
+                    <h:outputText value="Brojeva za odabrati: " rendered="#{simulacijaFacade.prikaziBrojevaZaOdabrati}" /> 
+                    <p:inputText value="#{simulacijaFacade.simulacija.brojevaZaOdabrati}" rendered="#{simulacijaFacade.prikaziBrojevaZaOdabrati}" style="width: 50px;"/>  
+    
+                    
+                  
+                </h:panelGrid>  
+                
+                
+                <h:panelGrid columns="4" columnClasses="label, value" styleClass="grid" rendered="#{simulacijaFacade.renderOdabirBrojeva}" >              
+					<simulator:kombinacija1 naslov="Kombinacija 1"  rendered="#{simulacijaFacade.generirajKombinaciju(1)}"/> 
+					<simulator:kombinacija2 naslov="Kombinacija 2"  rendered="#{simulacijaFacade.generirajKombinaciju(2)}"/>
+					<simulator:kombinacija3 naslov="Kombinacija 3"  rendered="#{simulacijaFacade.generirajKombinaciju(3)}"/>
+					<simulator:kombinacija4 naslov="Kombinacija 4"  rendered="#{simulacijaFacade.generirajKombinaciju(4)}"/>
+					<simulator:kombinacija5 naslov="Kombinacija 5"  rendered="#{simulacijaFacade.generirajKombinaciju(5)}"/>		            
+					<simulator:kombinacija6 naslov="Kombinacija 6"  rendered="#{simulacijaFacade.generirajKombinaciju(6)}"/>
+					<simulator:kombinacija7 naslov="Kombinacija 7"  rendered="#{simulacijaFacade.generirajKombinaciju(7)}"/>		            
+					<simulator:kombinacija8 naslov="Kombinacija 8"  rendered="#{simulacijaFacade.generirajKombinaciju(8)}"/>
+					<simulator:kombinacija9 naslov="Kombinacija 9"  rendered="#{simulacijaFacade.generirajKombinaciju(9)}"/>		            
+					<simulator:kombinacija10 naslov="Kombinacija 10" rendered="#{simulacijaFacade.generirajKombinaciju(10)}"/>	
+					<simulator:kombinacija10 naslov="Kombinacija 11" rendered="#{simulacijaFacade.generirajKombinaciju(11)}"/>	
+					<simulator:kombinacija10 naslov="Kombinacija 12" rendered="#{simulacijaFacade.generirajKombinaciju(12)}"/>		         	            
+				</h:panelGrid>
+
+			    
+				<p:commandButton id="submitButton01" value="Pokreni simulaciju" update="mainForm" action="#{simulacijaFacade.pokreniSimulaciju}" onclick="javascript:start();" /> 
+                 
+                 
+                
+
+				
+ 				<p:messages id="messages"  />   
+  				
+
+                
+           </p:outputPanel>
+
+ 
+	 	<p:outputPanel id="piePanel" style="width:658px" rendered="#{simulacijaFacade.simulationStarted == true}">  
+	 	
+	 	  	<p:poll interval="1"  update="chart1" />  
+			<p:pieChart id="chart1" value="#{simulacijaFacade.pieModel}" legendPosition="w"  style="width:650px;height:300px" showDataLabels="true" />  
+                 
+	 	
+	 	</p:outputPanel>
+ 
+ 
+
+ 
+ 		<p:growl id="simulationMessage" showDetail="true" sticky="true" globalOnly="true" />  
+  		<p:poll interval="5" listener="#{simulacijaFacade.displaySimulationMessage}" update="simulationMessage"/>  
+      
+</h:form>  
+              
+        </h:body>  
+        
+        
+        <div id="myDiv"></div>
+        
+        
+        
+        
+    </html>  
