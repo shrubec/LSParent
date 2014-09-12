@@ -23,6 +23,8 @@ public class KoloDO {
 	private Integer ukupnoPogodjeno8=0;
 	private Integer ukupnoPogodjeno9=0;
 	private Integer ukupnoPogodjeno10=0;
+	private Integer ukupnoPogodjeno11=0;
+	private Integer ukupnoPogodjeno12=0;
 	
 	private Integer ukupnoOdigrano=0;
 	
@@ -56,6 +58,10 @@ public class KoloDO {
 			ukupnoPogodjeno9++;
 		if (pogodjeno == 10)
 			ukupnoPogodjeno10++;
+		if (pogodjeno == 11)
+			ukupnoPogodjeno11++;
+		if (pogodjeno == 12)
+			ukupnoPogodjeno12++;
 		
 	}
 	
@@ -146,6 +152,22 @@ public class KoloDO {
 	}
 	public void setUkupnoPogodjeno10(Integer ukupnoPogodjeno10) {
 		this.ukupnoPogodjeno10 = ukupnoPogodjeno10;
+	}
+
+	public Integer getUkupnoPogodjeno11() {
+		return ukupnoPogodjeno11;
+	}
+
+	public void setUkupnoPogodjeno11(Integer ukupnoPogodjeno11) {
+		this.ukupnoPogodjeno11 = ukupnoPogodjeno11;
+	}
+
+	public Integer getUkupnoPogodjeno12() {
+		return ukupnoPogodjeno12;
+	}
+
+	public void setUkupnoPogodjeno12(Integer ukupnoPogodjeno12) {
+		this.ukupnoPogodjeno12 = ukupnoPogodjeno12;
 	}
 
 

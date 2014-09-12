@@ -95,32 +95,32 @@ public class Updater extends HttpServlet {
 		
 		
 		out.println("<tr>");
-		out.println("<th scope='col' colspan='2' >Current progress</th>");
+		out.println("<th scope='col' colspan='2' >Current draw</th>");
 		out.println("<tr>");
 		out.println("</tr>");
 		
 		
 		out.println("<tr>");
 		out.println("<td width='350'>");
-		out.println("Trenutno kolo");
+		out.println("Draw num.");
 		out.println("</td>");
 		out.println("<td align='right' width='250'>");
 		out.println(trenutnoKolo.getKolo());
 		out.println("</td>");
 		out.println("</tr>");
 
-		out.println("<tr>");
-		out.println("<td width='350'>");
-		out.println("Ukupno odigrano kombinacija");
-		out.println("</td>");
-		out.println("<td align='right' width='250'>");
-		out.println(trenutnoKolo.getUkupnoOdigrano());
-		out.println("</td>");
-		out.println("</tr>");
+//		out.println("<tr>");
+//		out.println("<td width='350'>");
+//		out.println("Ukupno odigrano kombinacija");
+//		out.println("</td>");
+//		out.println("<td align='right' width='250'>");
+//		out.println(trenutnoKolo.getUkupnoOdigrano());
+//		out.println("</td>");
+//		out.println("</tr>");
 		
 		out.println("<tr>");
 		out.println("<td width='350'>");
-		out.println("Datum");
+		out.println("Date");
 		out.println("</td>");
 		out.println("<td align='right' width='250'>");
 		if (trenutnoKolo.getDatum() != null)
@@ -131,7 +131,7 @@ public class Updater extends HttpServlet {
 		
 		out.println("<tr>");
 		out.println("<td width='350'>");
-		out.println("Izvuceni brojevi");
+		out.println("Winning numbers");
 		out.println("</td>");
 		out.println("<td align='right' width='250'>");
 		
@@ -139,8 +139,10 @@ public class Updater extends HttpServlet {
 		out.println("<tr>");
 		
 		
+		Integer brojeva=0;
 		if (map != null) {
 			Loto loto=(Loto) map.get(trenutnaSimulacijaId);
+			brojeva=loto.getBrojeva();
 			List<Integer> izvuceno=loto.getTrenutnoIzvlacenje().getKola().get(0).getIzvuceno();
 			for (int i=0; i < izvuceno.size(); i++) { 
 				Integer broj=izvuceno.get(i);
@@ -177,7 +179,7 @@ public class Updater extends HttpServlet {
 		
 		out.println("<tr>");
 		out.println("<td width='200'>");
-		out.println("Ukupno nula");
+		out.println("Totally match 0");
 		out.println("</td>");
 		out.println("<td align='right' width='50'>");
 		out.println(trenutnoKolo.getUkupnoPogodjeno0());
@@ -193,7 +195,7 @@ public class Updater extends HttpServlet {
 		
 		out.println("<tr>");
 		out.println("<td width='200'>");
-		out.println("Ukupno jedinica");
+		out.println("Totally match 1");
 		out.println("</td>");
 		out.println("<td align='right' width='50'>");
 		out.println(trenutnoKolo.getUkupnoPogodjeno1());
@@ -202,7 +204,7 @@ public class Updater extends HttpServlet {
 		
 		out.println("<tr>");
 		out.println("<td width='200'>");
-		out.println("Ukupno dvojki");
+		out.println("Totally match 2");
 		out.println("</td>");
 		out.println("<td align='right' width='50'>");
 		out.println(trenutnoKolo.getUkupnoPogodjeno2());
@@ -211,7 +213,7 @@ public class Updater extends HttpServlet {
 		
 		out.println("<tr>");
 		out.println("<td width='200'>");
-		out.println("Ukupno trojki");
+		out.println("Totally match 3");
 		out.println("</td>");
 		out.println("<td align='right' width='50'>");
 		out.println(trenutnoKolo.getUkupnoPogodjeno3());
@@ -220,7 +222,7 @@ public class Updater extends HttpServlet {
 		
 		out.println("<tr>");
 		out.println("<td width='200'>");
-		out.println("Ukupno cetvorki");
+		out.println("Totally match 4");
 		out.println("</td>");
 		out.println("<td align='right' width='50'>");
 		out.println(trenutnoKolo.getUkupnoPogodjeno4());
@@ -229,7 +231,7 @@ public class Updater extends HttpServlet {
 		
 		out.println("<tr>");
 		out.println("<td width='200'>");
-		out.println("Ukupno petica");
+		out.println("Totally match 5");
 		out.println("</td>");
 		out.println("<td align='right' width='50'>");
 		out.println(trenutnoKolo.getUkupnoPogodjeno5());
@@ -238,7 +240,7 @@ public class Updater extends HttpServlet {
 		
 		out.println("<tr>");
 		out.println("<td width='200'>");
-		out.println("Ukupno sestica");
+		out.println("Totally match 6");
 		out.println("</td>");
 		out.println("<td align='right' width='50'>");
 		out.println(trenutnoKolo.getUkupnoPogodjeno6());
@@ -247,12 +249,61 @@ public class Updater extends HttpServlet {
 		
 		out.println("<tr>");
 		out.println("<td width='200'>");
-		out.println("Ukupno sedmica");
+		out.println("Totally match 7");
 		out.println("</td>");
 		out.println("<td align='right' width='50'>");
 		out.println(trenutnoKolo.getUkupnoPogodjeno7());
 		out.println("</td>");
 		out.println("</tr>");
+		
+		if (brojeva.intValue() == 12) {
+			
+			out.println("<tr>");
+			out.println("<td width='200'>");
+			out.println("Totally match 8");
+			out.println("</td>");
+			out.println("<td align='right' width='50'>");
+			out.println(trenutnoKolo.getUkupnoPogodjeno8());
+			out.println("</td>");
+			out.println("</tr>");
+			
+			out.println("<tr>");
+			out.println("<td width='200'>");
+			out.println("Totally match 9");
+			out.println("</td>");
+			out.println("<td align='right' width='50'>");
+			out.println(trenutnoKolo.getUkupnoPogodjeno9());
+			out.println("</td>");
+			out.println("</tr>");
+			
+			out.println("<tr>");
+			out.println("<td width='200'>");
+			out.println("Totally match 10");
+			out.println("</td>");
+			out.println("<td align='right' width='50'>");
+			out.println(trenutnoKolo.getUkupnoPogodjeno10());
+			out.println("</td>");
+			out.println("</tr>");
+			
+			out.println("<tr>");
+			out.println("<td width='200'>");
+			out.println("Totally match 11");
+			out.println("</td>");
+			out.println("<td align='right' width='50'>");
+			out.println(trenutnoKolo.getUkupnoPogodjeno11());
+			out.println("</td>");
+			out.println("</tr>");
+			
+			out.println("<tr>");
+			out.println("<td width='200'>");
+			out.println("Totally match 12");
+			out.println("</td>");
+			out.println("<td align='right' width='50'>");
+			out.println(trenutnoKolo.getUkupnoPogodjeno12());
+			out.println("</td>");
+			out.println("</tr>");
+			
+		}
 		
 		out.println("</table>");
 		
@@ -280,14 +331,9 @@ public class Updater extends HttpServlet {
 	
 	private void generateNumbers(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
-		System.out.println("U UPDATERU....");
-		
 		String trenutnaSimulacijaId=request.getParameter("trenutnaSimulacija");
 		System.out.println("JSP TrenutaSimulacijaId = " + trenutnaSimulacijaId);
-
 		Map map=(Map) request.getSession().getAttribute("simulacija");
-
-		System.out.println("JSP MAP = " + map);
 
 		Loto loto=null;
 		IzvlacenjeDO trenutnoIzvlacenje=null;
@@ -295,7 +341,6 @@ public class Updater extends HttpServlet {
 			loto=(Loto) map.get(trenutnaSimulacijaId);
 			trenutnoIzvlacenje= loto.getTrenutnoIzvlacenje();
 		}
-		
 		
 		
 		if (trenutnoIzvlacenje != null) { 
@@ -333,11 +378,9 @@ public class Updater extends HttpServlet {
 					out.println("</tr>");
 			*/
 			
-			
-
 					
 					out.println("<tr>");
-					out.println("<th scope='col' colspan="+ loto.getTrenutnoIzvlacenje().getKola().get(0).getKombinacije().get(0).getOdigrano().size()+" >Odabrani brojevi</th>");
+					out.println("<th scope='col' colspan="+ loto.getTrenutnoIzvlacenje().getKola().get(0).getKombinacije().get(0).getOdigrano().size()+" >My numbers</th>");
 					out.println("<tr>");
 					out.println("</tr>");
 					
@@ -352,19 +395,12 @@ public class Updater extends HttpServlet {
 				
 	
 					List<Integer> odigrano=kolo.getKombinacije().get(0).getOdigrano();
-					
-				
 					for (Integer broj:odigrano) { 
-						
-//						out.println("<td width='25' align='right' >");
-						
-						
 						
 						if (set.contains(broj)) {	
 							out.println("<td align='right' >");
 							out.println("<font color='red' >");
 							out.println("<b>");
-					
 						}
 					
 						else {
@@ -373,8 +409,6 @@ public class Updater extends HttpServlet {
 						
 						
 						out.print(broj.intValue());  //out.println("&nbsp;&nbsp;&nbsp");
-						
-						
 
 						if (set.contains(broj)) {	
 
@@ -382,17 +416,12 @@ public class Updater extends HttpServlet {
 							out.println("</b>");
 						}
 
-						
-						
 						out.println("</td>");
 						
 				}
-
-				
 					out.println("</tr>");
 				
 			 } 
-
 
 				out.println("</table>");
 

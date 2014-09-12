@@ -18,9 +18,9 @@
          <p:outputPanel rendered="#{simulacijaFacade.simulationStarted == false}">
 		
 			<div class="post">
-						<h2 class="title"><a href="#">Welcome to Lottery Simulator 123</a>				</h2>
+						<h2 class="title"><a href="#">Welcome to Lottery Simulator</a>				</h2>
 						<div class="entry">
-					    <p>Select lottery type, draw days and your lucky numbers in up to 12 tickets, then start simulation to find out your real chances for winning jackpot by simulating lottery drawing every week through decades and centuries.</p>
+					    <p>Select lottery type, draw days and your lucky numbers in up to 12 tickets, then start simulation to find out your real chances for winning lottery. If you win a jackpot in simulator, maybe you'l be lucky enough in real life! </p>
 					   	<p>Good luck!</p>
 		             </div>
 			</div>
@@ -28,7 +28,7 @@
 		</p:outputPanel>
          
   
-    <p:growl id="growl" sticky="true" showDetail="true"/>  
+    <p:growl id="growl" sticky="true" showDetail="true" globalOnly="true"/>  
   
 		   <p:outputPanel id="mainPanel" style="width:658px" >  
 		      	<p:poll interval="1"  update="finished" />  
@@ -50,20 +50,32 @@
             <p:outputPanel id="headerPanel" style="width:658px" rendered="#{simulacijaFacade.simulationStarted == false}">  
 
                 <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">  
-                    <h:outputText value="Tip lota: *" style="font-size: 75% !important;"/>  
+                    <h:outputText value="Lottery Type: " style="font-size: 75% !important;"/>  
 
-                    <p:selectOneMenu value="#{simulacijaFacade.simulacija.vrsta}" required="true" requiredMessage="Obavezan unos"  style="width: 150px;font-size: 75% !important;" >
-                                
-		                <f:selectItem itemLabel="Loto 7/39" itemValue="1" ></f:selectItem>
-		                <f:selectItem itemLabel="Loto 6/45" itemValue="2" ></f:selectItem>
-		                <f:selectItem itemLabel="Loto 5/90" itemValue="3" ></f:selectItem>
-		                <f:selectItem itemLabel="Kreiraj vlastiti tip lota" itemValue="10" ></f:selectItem>
+                    <p:selectOneMenu value="#{simulacijaFacade.simulacija.vrsta}" required="true" requiredMessage="Field is required"  style="width: 150px;font-size: 75% !important;" >
+
+					<f:selectItem itemLabel="Lotto 5/35" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 5/36" itemValue="2"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 5/40" itemValue="3"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 5/42" itemValue="4"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 5/90" itemValue="5"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 6/39" itemValue="6"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 6/42" itemValue="7"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 6/45" itemValue="8"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 6/49" itemValue="9"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 7/35" itemValue="10"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 7/39" itemValue="11"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 7/49" itemValue="12"></f:selectItem>
+					<f:selectItem itemLabel="Lotto 12/24" itemValue="13"></f:selectItem>
+
+		                
+<!-- 		                <f:selectItem itemLabel="Kreiraj vlastiti tip lota" itemValue="10" ></f:selectItem> -->
 		                
 		                 <p:ajax update="mainForm" listener="#{simulacijaFacade.updateBrojeva}"/>  
 		                                                          
 		            </p:selectOneMenu>        
                             
-                <h:outputText value="Kombinacija za odigrati: " style="font-size: 75% !important;" /> 
+                <h:outputText value="Number of tickets:" style="font-size: 75% !important;" /> 
                    <p:selectOneMenu value="#{simulacijaFacade.kombinacijaZaIspuniti}"   style="width: 50px;font-size: 75% !important;">
                                 
                         <f:selectItem itemLabel="1" itemValue="1"></f:selectItem>
@@ -83,8 +95,8 @@
                                          
 		            </p:selectOneMenu>     
 		            
-                   <h:outputText value="Izvlačenje svaki: " style="font-size: 75% !important;"/>  
-                   <p:selectManyCheckbox value="#{simulacijaFacade.simulacija.izvlacenja}" required="true" requiredMessage="Obavezan unos" style="width: 200px;font-size: 75% !important;" >
+                   <h:outputText value="Play every: " style="font-size: 75% !important;"/>  
+                   <p:selectManyCheckbox value="#{simulacijaFacade.simulacija.izvlacenja}" required="true" requiredMessage="Field is required" style="width: 200px;font-size: 75% !important;" >
                                 
                         <f:selectItem itemLabel="Monday" itemValue="2"></f:selectItem>
                         <f:selectItem itemLabel="Tuesday" itemValue="3" ></f:selectItem>
@@ -98,10 +110,6 @@
                       
                      
                      
-                  
-                      
-                      
-                      
                     <h:outputText value="Brojeva za odabrati: " rendered="#{simulacijaFacade.prikaziBrojevaZaOdabrati}" /> 
                     <p:inputText value="#{simulacijaFacade.simulacija.brojevaZaOdabrati}" rendered="#{simulacijaFacade.prikaziBrojevaZaOdabrati}" style="width: 50px;"/>  
     
@@ -111,22 +119,22 @@
                 
                 
                 <h:panelGrid columns="4" columnClasses="label, value" styleClass="grid" rendered="#{simulacijaFacade.renderOdabirBrojeva}" >              
-					<simulator:kombinacija1 naslov="Kombinacija 1"  rendered="#{simulacijaFacade.generirajKombinaciju(1)}"/> 
-					<simulator:kombinacija2 naslov="Kombinacija 2"  rendered="#{simulacijaFacade.generirajKombinaciju(2)}"/>
-					<simulator:kombinacija3 naslov="Kombinacija 3"  rendered="#{simulacijaFacade.generirajKombinaciju(3)}"/>
-					<simulator:kombinacija4 naslov="Kombinacija 4"  rendered="#{simulacijaFacade.generirajKombinaciju(4)}"/>
-					<simulator:kombinacija5 naslov="Kombinacija 5"  rendered="#{simulacijaFacade.generirajKombinaciju(5)}"/>		            
-					<simulator:kombinacija6 naslov="Kombinacija 6"  rendered="#{simulacijaFacade.generirajKombinaciju(6)}"/>
-					<simulator:kombinacija7 naslov="Kombinacija 7"  rendered="#{simulacijaFacade.generirajKombinaciju(7)}"/>		            
-					<simulator:kombinacija8 naslov="Kombinacija 8"  rendered="#{simulacijaFacade.generirajKombinaciju(8)}"/>
-					<simulator:kombinacija9 naslov="Kombinacija 9"  rendered="#{simulacijaFacade.generirajKombinaciju(9)}"/>		            
-					<simulator:kombinacija10 naslov="Kombinacija 10" rendered="#{simulacijaFacade.generirajKombinaciju(10)}"/>	
-					<simulator:kombinacija10 naslov="Kombinacija 11" rendered="#{simulacijaFacade.generirajKombinaciju(11)}"/>	
-					<simulator:kombinacija10 naslov="Kombinacija 12" rendered="#{simulacijaFacade.generirajKombinaciju(12)}"/>		         	            
+					<simulator:kombinacija1 naslov="Ticket 1"  rendered="#{simulacijaFacade.generirajKombinaciju(1)}"/> 
+					<simulator:kombinacija2 naslov="Ticket 2"  rendered="#{simulacijaFacade.generirajKombinaciju(2)}"/>
+					<simulator:kombinacija3 naslov="Ticket 3"  rendered="#{simulacijaFacade.generirajKombinaciju(3)}"/>
+					<simulator:kombinacija4 naslov="Ticket 4"  rendered="#{simulacijaFacade.generirajKombinaciju(4)}"/>
+					<simulator:kombinacija5 naslov="Ticket 5"  rendered="#{simulacijaFacade.generirajKombinaciju(5)}"/>		            
+					<simulator:kombinacija6 naslov="Ticket 6"  rendered="#{simulacijaFacade.generirajKombinaciju(6)}"/>
+					<simulator:kombinacija7 naslov="Ticket 7"  rendered="#{simulacijaFacade.generirajKombinaciju(7)}"/>		            
+					<simulator:kombinacija8 naslov="Ticket 8"  rendered="#{simulacijaFacade.generirajKombinaciju(8)}"/>
+					<simulator:kombinacija9 naslov="Ticket 9"  rendered="#{simulacijaFacade.generirajKombinaciju(9)}"/>		            
+					<simulator:kombinacija10 naslov="Ticket 10" rendered="#{simulacijaFacade.generirajKombinaciju(10)}"/>	
+					<simulator:kombinacija10 naslov="Ticket 11" rendered="#{simulacijaFacade.generirajKombinaciju(11)}"/>	
+					<simulator:kombinacija10 naslov="Ticket 12" rendered="#{simulacijaFacade.generirajKombinaciju(12)}"/>		         	            
 				</h:panelGrid>
 
 			    
-				<p:commandButton id="submitButton01" value="Pokreni simulaciju" update="mainForm" action="#{simulacijaFacade.pokreniSimulaciju}" onclick="javascript:start();" /> 
+				<p:commandButton id="submitButton01" value="Start simulation" update="mainForm" action="#{simulacijaFacade.pokreniSimulaciju}"  onsuccess="javascript:start();"/> 
                  
                  
                 

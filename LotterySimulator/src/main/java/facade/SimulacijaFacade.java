@@ -100,8 +100,6 @@ public class SimulacijaFacade {
 
 
 	public String onFlowProcess(FlowEvent event) {  
-       System.out.println("Current wizard step:" + event.getOldStep() + ", " + event.getPhaseId().getOrdinal());  
-       System.out.println("Next step:" + event.getNewStep());  
        
        if (event.getNewStep().equals("rezultati"))
     	   validiraj();
@@ -164,16 +162,56 @@ public class SimulacijaFacade {
 	
 	public void updateBrojeva() {
 		 if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 1) {
-			 simulacija.setBrojeva(7);
-			 simulacija.setOdBrojeva(39);
+			 simulacija.setBrojeva(5);
+			 simulacija.setOdBrojeva(35);
 		 }
 		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 2) {
-			 simulacija.setBrojeva(6);
-			 simulacija.setOdBrojeva(45);
+			 simulacija.setBrojeva(5);
+			 simulacija.setOdBrojeva(36);
 		 }
 		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 3) {
 			 simulacija.setBrojeva(5);
+			 simulacija.setOdBrojeva(40);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 4) {
+			 simulacija.setBrojeva(5);
+			 simulacija.setOdBrojeva(42);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 5) {
+			 simulacija.setBrojeva(5);
 			 simulacija.setOdBrojeva(90);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 6) {
+			 simulacija.setBrojeva(6);
+			 simulacija.setOdBrojeva(39);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 7) {
+			 simulacija.setBrojeva(6);
+			 simulacija.setOdBrojeva(42);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 8) {
+			 simulacija.setBrojeva(6);
+			 simulacija.setOdBrojeva(45);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 9) {
+			 simulacija.setBrojeva(6);
+			 simulacija.setOdBrojeva(49);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 10) {
+			 simulacija.setBrojeva(7);
+			 simulacija.setOdBrojeva(35);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 11) {
+			 simulacija.setBrojeva(7);
+			 simulacija.setOdBrojeva(39);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 12) {
+			 simulacija.setBrojeva(7);
+			 simulacija.setOdBrojeva(49);
+		 }
+		 else if (simulacija.getVrsta() != null && simulacija.getVrsta().intValue() == 13) {
+			 simulacija.setBrojeva(12);
+			 simulacija.setOdBrojeva(24);
 		 }
 		 
 		 if (simulacija.getBrojeva() != null)
@@ -270,20 +308,16 @@ public class SimulacijaFacade {
 	}
 
 
-	private void validiraj() {
+	private boolean validiraj() {
 		
+		boolean success=true;
 		if (simulacija.getTipBrojeva().intValue() == Simulacija.SIMULACIJA_TIPBROJEVA_UNOS) {
-			boolean success=true;
 			for (int i=0; i < kombinacijaZaIspuniti; i++) {
 				if (!validirajKombinaciju(i))
 					success=false;
 			}	
 			
 			if (success) {
-				
-				System.out.println("NEW LOTO: " + simulacija.getBrojeva()+"/" + simulacija.getOdBrojeva());
-
-				
 				
 				listaKombinacija=new ArrayList<List<Integer>>();	
 				List<Integer> listaBrojeva=new ArrayList<Integer>();
@@ -328,10 +362,8 @@ public class SimulacijaFacade {
 				
 				session.setAttribute("simulacija", simulacijaMap);
 				
-				System.out.println("ATRIBBUT SIMULACIJA POSTAVLJEN");
 				
 				trenutnaSimulacijaId=loto.getSimulacijaId();
-				
 				
 				System.out.println("TRENUTNA SIMULACIJA ID: " + trenutnaSimulacijaId);
 				
@@ -347,6 +379,8 @@ public class SimulacijaFacade {
 	
 		}
 		
+		return success;
+		
 	}
 	
 	
@@ -359,7 +393,7 @@ public class SimulacijaFacade {
 			List lista=new ArrayList(kom.getBrojeviKombinacije());
 			if (lista.size() > 0 && lista.size() != simulacija.getBrojeva().intValue()) {
 				
-				String poruka="Kombinacija " + (kombinacija+1) + ": odabrano "+ lista.size() + " od potrebnih " + simulacija.getBrojeva() + " brojeva";
+				String poruka="Ticket " + (kombinacija+1) + ": please select " + simulacija.getBrojeva() + " numbers";
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, poruka, poruka));
 				return false;
 			}	
@@ -380,11 +414,13 @@ public class SimulacijaFacade {
 
 	
 	public void test() {
-		System.out.println("Test Metoda!!!");
 	}
 	
 	public void pokreniSimulaciju() {
-		validiraj();
+		
+		if (!validiraj()) {
+			return;
+		}
 		
 		
 		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
@@ -413,7 +449,7 @@ public class SimulacijaFacade {
 			for (List<Integer> list:listaKombinacija) {
 				
 				if (!list.isEmpty()) {
-					String selectedNumbersList="Kombinacija " +i+": ";
+					String selectedNumbersList="Ticket " +i+": ";
 					for (Integer number:list) {
 						selectedNumbersList=selectedNumbersList+number.toString()+" ";
 					}
@@ -448,7 +484,6 @@ public class SimulacijaFacade {
 		Loto loto=(Loto) map.get(trenutnaSimulacijaId);
 		if (loto != null) {
 			System.out.println("FACADE simulacija id: " + trenutnaSimulacijaId + ", finished: " +loto.isFinished());
-			
 			return new Boolean(loto.isFinished()).toString();
 		}
 		
@@ -480,28 +515,44 @@ public class SimulacijaFacade {
 
 		if(loto == null || loto.getTrenutnoKolo() == null) {
 
-			pieModel.set("Promaseno", 0);
-			pieModel.set("Pogoðen 1 broj", 0);
-			pieModel.set("Pogoðena 2 broja", 0);
-			pieModel.set("Pogoðena 3 broja", 0);
-			pieModel.set("Pogoðena 4 broja", 0);
-			pieModel.set("Pogoðena 5 broja", 0);
-			pieModel.set("Pogoðena 6 broja", 0);
-			pieModel.set("Pogoðena 7 broja", 0);
+			pieModel.set("All numbers missed", 0);
+			pieModel.set("Match 1", 0);
+			pieModel.set("Match 2", 0);
+			pieModel.set("Match 3", 0);
+			pieModel.set("Match 4", 0);
+			pieModel.set("Match 5", 0);
+			pieModel.set("Match 6", 0);
+			pieModel.set("Match 7", 0);
+			
+			if (simulacija.getBrojeva().intValue() == 12) {
+				pieModel.set("Match 8", 0);
+				pieModel.set("Match 9", 0);
+				pieModel.set("Match 10", 0);
+				pieModel.set("Match 11", 0);
+				pieModel.set("Match 12", 0);
+			}
 
 			return pieModel;
 		}
 		
 		
 
-	     pieModel.set("Promaseno",  loto.getTrenutnoKolo().getUkupnoPogodjeno0());  
-	     pieModel.set("Pogoðen 1 broj",  loto.getTrenutnoKolo().getUkupnoPogodjeno1());  
-	     pieModel.set("Pogoðena 2 broja",  loto.getTrenutnoKolo().getUkupnoPogodjeno2());  
-	     pieModel.set("Pogoðena 3 broja",  loto.getTrenutnoKolo().getUkupnoPogodjeno3());
-	     pieModel.set("Pogoðena 4 broja",  loto.getTrenutnoKolo().getUkupnoPogodjeno4());
-	     pieModel.set("Pogoðena 5 broja",  loto.getTrenutnoKolo().getUkupnoPogodjeno5());
-	     pieModel.set("Pogoðena 6 broja",  loto.getTrenutnoKolo().getUkupnoPogodjeno6());
-	     pieModel.set("Pogoðena 7 broja",  loto.getTrenutnoKolo().getUkupnoPogodjeno7());
+	     pieModel.set("All numbers missed",  loto.getTrenutnoKolo().getUkupnoPogodjeno0());  
+	     pieModel.set("Match 1 ",  loto.getTrenutnoKolo().getUkupnoPogodjeno1());  
+	     pieModel.set("Match 2",  loto.getTrenutnoKolo().getUkupnoPogodjeno2());  
+	     pieModel.set("Match 3",  loto.getTrenutnoKolo().getUkupnoPogodjeno3());
+	     pieModel.set("Match 4",  loto.getTrenutnoKolo().getUkupnoPogodjeno4());
+	     pieModel.set("Match 5",  loto.getTrenutnoKolo().getUkupnoPogodjeno5());
+	     pieModel.set("Match 6",  loto.getTrenutnoKolo().getUkupnoPogodjeno6());
+	     pieModel.set("Match 7",  loto.getTrenutnoKolo().getUkupnoPogodjeno7());
+	     
+	 	if (simulacija.getBrojeva().intValue() == 12) {
+	 		 pieModel.set("Match 8",  loto.getTrenutnoKolo().getUkupnoPogodjeno8());
+	 		 pieModel.set("Match 9",  loto.getTrenutnoKolo().getUkupnoPogodjeno9());
+	 		 pieModel.set("Match 10",  loto.getTrenutnoKolo().getUkupnoPogodjeno10());
+	 		 pieModel.set("Match 11",  loto.getTrenutnoKolo().getUkupnoPogodjeno11());
+	 		 pieModel.set("Match 12",  loto.getTrenutnoKolo().getUkupnoPogodjeno12());
+	 	}
 		
 		return pieModel;
 	} 

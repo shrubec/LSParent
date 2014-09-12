@@ -6,11 +6,11 @@ import java.util.List;
 public class Simulacija {
 
 	
-	public static final Integer SIMULACIJA_VRSTA_645=1;
-	public static final Integer SIMULACIJA_VRSTA_739=2;
-	public static final Integer SIMULACIJA_VRSTA_590=3;
-	public static final Integer SIMULACIJA_VRSTA_CUSTOM=10;
-	
+//	public static final Integer SIMULACIJA_VRSTA_645=1;
+//	public static final Integer SIMULACIJA_VRSTA_739=2;
+//	public static final Integer SIMULACIJA_VRSTA_590=3;
+//	public static final Integer SIMULACIJA_VRSTA_CUSTOM=10;
+//	
 	public static final Integer SIMULACIJA_TIPIGRE_LOTOKLAS=1;
 	public static final Integer SIMULACIJA_TIPIGRE_LOTOSIS=2;
 	public static final Integer SIMULACIJA_TIPIGRE_LOTOKLA=3;

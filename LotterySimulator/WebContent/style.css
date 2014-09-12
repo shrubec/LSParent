@@ -9,7 +9,6 @@ body {
 
 h1, h2, h3 {
 	margin: 0;
-	text-transform: uppercase;
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: normal;
 	color: #000000;
@@ -107,7 +106,7 @@ hr { display: none; }
 	margin-right: 3px;
 	padding: 13px 25px 2px 25px;
 	text-decoration: none;
-	text-transform: capitalize;
+/* 	text-transform: capitalize; */
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	color: #333c4c;
@@ -314,7 +313,7 @@ hr { display: none; }
 	height: 26px;
 	margin: 0 0 10px 0px;
 	padding: 12px 0 2px 7px;
-	text-transform: capitalize;
+/* 	text-transform: capitalize; */
 	font-size: 18px;
 	font-weight: normal;
 	color: #fff;

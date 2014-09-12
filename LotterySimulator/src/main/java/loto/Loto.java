@@ -420,5 +420,16 @@ public class Loto {
 	public String getLotteryType() {
 		return String.valueOf(brojeva) +" / " + String.valueOf(odBrojeva);
 	}
+
+	public int getBrojeva() {
+		return brojeva;
+	}
+
+	public void setBrojeva(int brojeva) {
+		this.brojeva = brojeva;
+	}
+	
+	
+	
 	
 }
