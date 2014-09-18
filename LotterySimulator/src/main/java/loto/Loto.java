@@ -1,5 +1,8 @@
 package loto;
 
+import hr.shrubec.simulacija.util.SimulacijaResultFile;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,8 +13,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import listic.Broj;
@@ -34,6 +35,8 @@ public class Loto {
 	private String simulacijaId;
 	private KoloDO trenutnoKolo;
 	private boolean finished=false;
+	private boolean savedAsFinished=false;
+	
 	private KoloDO koloDo=new KoloDO();
 	
 	private IzvlacenjeDO trenutnoIzvlacenje;
@@ -44,18 +47,26 @@ public class Loto {
 	
 	private List<String> messagesList=new ArrayList<String>();
 	private List<Integer> izvlacenja;
+	private int trajanjeGodina=10;
+	private Calendar startTime;
+	private boolean paused=false;
+	private boolean nextStepActivated=false;
+	private SimulacijaResultFile resultFile;
 	
 	private HttpSession session;
 	
 	
-	public Loto(HttpSession session,String simulacijaId,int brojeva, int odBrojeva,List<String> izvlacenja) {
+	public Loto(HttpSession session,String simulacijaId,int brojeva, int odBrojeva,int trajanjeGodina,List<String> izvlacenja) {
 		
 		this.session=session;
 		this.simulacijaId=simulacijaId;
 		this.brojeva=brojeva;
 		this.odBrojeva=odBrojeva;
+		this.trajanjeGodina=trajanjeGodina;
 		this.izvlacenja=new ArrayList<Integer>();
 		
+		resultFile=new SimulacijaResultFile(simulacijaId);	
+		startTime=Calendar.getInstance();
 		for (String number:izvlacenja) {
 			this.izvlacenja.add(Integer.valueOf(number));
 		}
@@ -66,13 +77,10 @@ public class Loto {
 		
 		Integer dan=cal.get(Calendar.DAY_OF_WEEK);
 		while (!this.izvlacenja.contains(dan)) {
-			
 			cal.add(Calendar.DAY_OF_WEEK,1);
 			dan=cal.get(Calendar.DAY_OF_WEEK);
-			System.out.println("U petlji....");
 		}
 		
-		System.out.println("Gotova petlja");
 		
 //		if (brojeva == 6 && odBrojeva == 45) {
 //			int dan=cal.get(Calendar.DAY_OF_WEEK);
@@ -95,7 +103,10 @@ public class Loto {
 	
 	public void kombinacije(int brojKola,List<List<Integer>> kombinacijeBrojeva) {
 		
-		for (int i=1; i <=brojKola; i++) {	
+//		for (int i=1; i <=brojKola; i++) {	
+		
+		int i=1;
+		while(true) {
 			
 			Calendar cal=Calendar.getInstance();
 			try {
@@ -107,7 +118,6 @@ public class Loto {
 				return;
 			}
 			
-			LOGGER.info("Last accessed time: " + cal.getTime());
 			Calendar cal1=Calendar.getInstance();
 			
 			if ((cal1.getTimeInMillis() - cal.getTimeInMillis()) > 5000) {
@@ -121,6 +131,20 @@ public class Loto {
 				return;
 			}
 			
+			if (paused) {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				continue;
+			}
+			
+			
+			
+			if (this.speed == 0) {
+				this.speed=10;
+			}
 			
 			try {
 				Thread.sleep(this.speed);
@@ -128,8 +152,6 @@ public class Loto {
 				e.printStackTrace();
 			}
 			
-			
-			LOGGER.info("KOLO " + i);
 			
 			List<Listic> listici=new ArrayList<Listic>();
 			for (List<Integer> brojevi:kombinacijeBrojeva) {
@@ -147,19 +169,38 @@ public class Loto {
 			odigraj(i,listici);		
 			
 			if (jackpot) {
-				
 				this.finished=true;
-				LOGGER.info("SKORO PA JACKPOT!!!");
+				LOGGER.info("JACKPOT!!!");
+				resultFile.closeFile();
 				return;
 				
 			}
-					
+			
+			
+			if (this.cal.get(Calendar.YEAR) > (startTime.get(Calendar.YEAR) + trajanjeGodina)) {
+				this.finished=true;
+				LOGGER.info("Simulacija istekla");
+				messagesList.add("Simulation finished!");
+				resultFile.closeFile();
+				return;
+			}
+		
+			i++;
+			
+			if (nextStepActivated) {
+				paused=true;
+			}
 		}
 			
-		LOGGER.info("simulacija završena!!!!");
-		
-		this.finished=true;
+//		LOGGER.info("simulacija završena!!!!");
+//		this.finished=true;
 	}
+	
+	
+	
+	
+	
+	
 	
 	public void kombinacijePojedinacno(int izvlacenje,int brojKola,List<List<Integer>> kombinacijeBrojeva) {
 		
@@ -266,7 +307,7 @@ public class Loto {
 		
 		
 	
-		Izvlacenje izvlacenje=new Izvlacenje(kolo,cal.getTime(),osvjezeniListici);
+		Izvlacenje izvlacenje=new Izvlacenje(kolo,cal.getTime(),osvjezeniListici,resultFile);
 		izvlacenje.izvuci(brojeva, odBrojeva, ranMT);
 		izvlacenje.provjeriRezultate();
 
@@ -291,17 +332,17 @@ public class Loto {
 				
 				KombinacijaDO kombinacijaDo=new KombinacijaDO();
 				
-				LOGGER.info("Odabrano:");
+//				LOGGER.info("Odabrano:");
 				for (Broj broj:kombinacija) {
-					LOGGER.info(broj.getBroj().intValue()+ ", ");
+//					LOGGER.info(broj.getBroj().intValue()+ ", ");
 					kombinacijaDo.getOdigrano().add(broj.getBroj());
 				}
-				LOGGER.info("Pogoðeno:");
+//				LOGGER.info("Pogoðeno:");
 				
 				int pogodjeno=0;
 				for (Broj broj:kombinacija) {
 					if (broj.getPogodjen()) {
-						LOGGER.info(broj.getBroj().intValue()+ ", ");
+//						LOGGER.info(broj.getBroj().intValue()+ ", ");
 						kombinacijaDo.getPogodjeno().add(broj.getBroj());
 						pogodjeno++;
 					}
@@ -322,9 +363,9 @@ public class Loto {
 				koloDo.setUkupnoPogodjeno10(prethodnoKolo.getUkupnoPogodjeno10());
 				
 				koloDo.povecajPogodjeno(pogodjeno);
-				LOGGER.info("Izvuèeno:");
+//				LOGGER.info("Izvuèeno:");
 				for (Broj broj:izvlacenje.getIzvucenaKombinacija()) {
-					LOGGER.info(broj.getBroj().intValue()+ ", ");
+//					LOGGER.info(broj.getBroj().intValue()+ ", ");
 					koloDo.getIzvuceno().add(broj.getBroj());
 				}
 				
@@ -332,8 +373,8 @@ public class Loto {
 				
 				izvlacenjeDo.getKola().add(koloDo);
 				
-				LOGGER.info("KOLA SIZE: "  +izvlacenjeDo.getKola().size() );
-				LOGGER.info(izvlacenje.getKolo() +". KOLO, DATUM " + sdf.format(izvlacenje.getDatum()) + ", UKUPNO POGOÐENO: " + listic.getBrojPogodjenihUKombinaciji(key) + ", ");
+//				LOGGER.info("KOLA SIZE: "  +izvlacenjeDo.getKola().size() );
+//				LOGGER.info(izvlacenje.getKolo() +". KOLO, DATUM " + sdf.format(izvlacenje.getDatum()) + ", UKUPNO POGOÐENO: " + listic.getBrojPogodjenihUKombinaciji(key) + ", ");
 				
 				setTrenutnoKolo(koloDo);
 				
@@ -345,7 +386,7 @@ public class Loto {
 				
 				if (listic.getBrojPogodjenihUKombinaciji(key).intValue() >= (brojeva - 1)) {
 					jackpot=true;
-					messagesList.add( sdf.format(izvlacenje.getDatum()) + " Jackpot missed by only one number!");
+					messagesList.add( sdf.format(izvlacenje.getDatum()) + " Jackpot missed by one number!");
 				}
 				
 				if (listic.getBrojPogodjenihUKombinaciji(key).intValue() >= (brojeva - 2)) {
@@ -428,8 +469,51 @@ public class Loto {
 	public void setBrojeva(int brojeva) {
 		this.brojeva = brojeva;
 	}
+
+	public boolean isSavedAsFinished() {
+		return savedAsFinished;
+	}
+
+	public void setSavedAsFinished(boolean savedAsFinished) {
+		this.savedAsFinished = savedAsFinished;
+	}
+
+	public int getTrajanjeGodina() {
+		return trajanjeGodina;
+	}
+
+	public void setTrajanjeGodina(int trajanjeGodina) {
+		this.trajanjeGodina = trajanjeGodina;
+	}
+
 	
+	public void pauseSimulation() {
+		this.paused=true;
+	}
 	
+	public void resumeSimulation() {
+		this.paused=false;
+		nextStepActivated=false;
+	}
+	
+	public void nextStep() {
+		nextStepActivated=true;
+		paused=false;
+	}
+	
+	public void deleteFile() {
+		
+		System.out.println("Brisem file.. ");
+		try {
+			resultFile.deleteFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public SimulacijaResultFile getResultFile() {
+		return resultFile;
+	}
 	
 	
 }

@@ -11,6 +11,8 @@
         </h:head>  
           
         <h:body>  
+        
+        
           
          <h:form id="mainForm">  
          
@@ -75,6 +77,18 @@
 		                                                          
 		            </p:selectOneMenu>        
                             
+                  <h:outputText value="Simulation duration:" style="font-size: 75% !important;" /> 
+                   <p:selectOneMenu value="#{simulacijaFacade.trajanjeGodina}"   style="width: 150px;font-size: 75% !important;">
+                                
+                        <f:selectItem itemLabel="1 year" itemValue="1"></f:selectItem>
+                        <f:selectItem itemLabel="10 years" itemValue="10" ></f:selectItem>
+		                <f:selectItem itemLabel="50 years" itemValue="50" ></f:selectItem>
+		                <f:selectItem itemLabel="100 years" itemValue="100" ></f:selectItem>
+                        <f:selectItem itemLabel="500 years" itemValue="500" ></f:selectItem>
+		                <f:selectItem itemLabel="1000 years" itemValue="1000" ></f:selectItem>
+		              
+		            </p:selectOneMenu>                 
+                            
                 <h:outputText value="Number of tickets:" style="font-size: 75% !important;" /> 
                    <p:selectOneMenu value="#{simulacijaFacade.kombinacijaZaIspuniti}"   style="width: 50px;font-size: 75% !important;">
                                 
@@ -94,6 +108,8 @@
 		                 <p:ajax update="mainForm" listener="#{simulacijaFacade.updateBrojeva}"/> 
                                          
 		            </p:selectOneMenu>     
+		            
+		        
 		            
                    <h:outputText value="Play every: " style="font-size: 75% !important;"/>  
                    <p:selectManyCheckbox value="#{simulacijaFacade.simulacija.izvlacenja}" required="true" requiredMessage="Field is required" style="width: 200px;font-size: 75% !important;" >
@@ -152,6 +168,14 @@
 	 	  	<p:poll interval="1"  update="chart1" />  
 			<p:pieChart id="chart1" value="#{simulacijaFacade.pieModel}" legendPosition="w"  style="width:650px;height:300px" showDataLabels="true" />  
                  
+                 
+                 <p:commandButton id="submitButton02" update="mainForm" rendered="#{simulacijaFacade.simulationPaused == false}" value="Pause simulation"  action="#{simulacijaFacade.pauseSimulation}"  onsuccess="javascript:pauseSimulation();" icon="ui-icon-pause"/> 
+                <p:commandButton id="submitButton03" update="mainForm" rendered="#{simulacijaFacade.simulationPaused == true}" value="Resume simulation"  action="#{simulacijaFacade.resumeSimulation}"  onsuccess="javascript:resumeSimulation();" icon="ui-icon-play"/> 
+                <p:commandButton id="submitButton04" update="mainForm" disabled="#{simulacijaFacade.simulationPaused == false}" value="Next draw"  action="#{simulacijaFacade.nextStep}"  onsuccess="javascript:nextDraw();" icon="ui-icon-seek-next"/>
+	 	
+				 <p:commandButton value="Download simulation results" ajax="false" onclick="PrimeFaces.monitorDownload(showDialog,hideDialog);" icon="ui-icon-arrowthick-1-s">
+			        <p:fileDownload value="#{simulacijaFacade.file}" />
+			    </p:commandButton>
 	 	
 	 	</p:outputPanel>
  
@@ -161,13 +185,16 @@
  		<p:growl id="simulationMessage" showDetail="true" sticky="true" globalOnly="true" />  
   		<p:poll interval="5" listener="#{simulacijaFacade.displaySimulationMessage}" update="simulationMessage"/>  
       
+      
 </h:form>  
+
               
         </h:body>  
         
         
         <div id="myDiv"></div>
         
+		
         
         
         

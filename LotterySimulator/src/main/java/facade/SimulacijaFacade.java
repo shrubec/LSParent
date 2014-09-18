@@ -2,7 +2,10 @@ package facade;
 
 import hr.shrubec.simulacija.bean.SimulacijaBean;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +21,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -28,6 +32,8 @@ import object.OdigraniBrojevi;
 import object.Simulacija;
 
 import org.primefaces.event.FlowEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.chart.PieChartModel;
 
 @ManagedBean
@@ -50,6 +56,7 @@ public class SimulacijaFacade {
 	private List<SelectItem> kombinacija1=new ArrayList<SelectItem>();
 	private List<String> selectedOptions;  
 	
+	private Integer trajanjeGodina=10;
 	private String trenutnaSimulacijaId=null;
 	private String finished="false";
 	private Integer pojedinacno=1;
@@ -62,8 +69,9 @@ public class SimulacijaFacade {
 	
 	
 	private Boolean simulationStarted=Boolean.FALSE;
+	private Boolean simulationPaused=Boolean.FALSE;
 	
-	
+	private StreamedContent file;
 	
 	
 	
@@ -347,7 +355,7 @@ public class SimulacijaFacade {
 				}	
 				
 				HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-				Loto loto=new Loto(session,UUID.randomUUID().toString(),simulacija.getBrojeva(),simulacija.getOdBrojeva(),simulacija.getIzvlacenja());
+				Loto loto=new Loto(session,UUID.randomUUID().toString(),simulacija.getBrojeva(),simulacija.getOdBrojeva(),trajanjeGodina,simulacija.getIzvlacenja());
 				
 				
 				Map simulacijaMap=null;				
@@ -484,6 +492,10 @@ public class SimulacijaFacade {
 		Loto loto=(Loto) map.get(trenutnaSimulacijaId);
 		if (loto != null) {
 			System.out.println("FACADE simulacija id: " + trenutnaSimulacijaId + ", finished: " +loto.isFinished());
+			if (loto.isFinished() && !loto.isSavedAsFinished()) {
+				simulacijaBean.zavrsiSimulaciju(trenutnaSimulacijaId, false);
+				loto.setSavedAsFinished(true);
+			}
 			return new Boolean(loto.isFinished()).toString();
 		}
 		
@@ -652,6 +664,76 @@ public class SimulacijaFacade {
 	public void setSimulationStarted(Boolean simulationStarted) {
 		this.simulationStarted = simulationStarted;
 	}
+	public Integer getTrajanjeGodina() {
+		return trajanjeGodina;
+	}
+	public void setTrajanjeGodina(Integer trajanjeGodina) {
+		this.trajanjeGodina = trajanjeGodina;
+	}
 	
 	
+	
+	
+	public Boolean getSimulationPaused() {
+		return simulationPaused;
+	}
+	public void setSimulationPaused(Boolean simulationPaused) {
+		this.simulationPaused = simulationPaused;
+	}
+	public void pauseSimulation() {
+		simulationPaused=true;
+		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		Loto loto=null;
+		Map map=(Map)session.getAttribute("simulacija");
+		if (map != null) {
+			loto=(Loto) map.get(trenutnaSimulacijaId);
+			loto.pauseSimulation();
+		}
+	}
+	
+	public void resumeSimulation() {
+		simulationPaused=false;
+		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		Loto loto=null;
+		Map map=(Map)session.getAttribute("simulacija");
+		if (map != null) {
+			loto=(Loto) map.get(trenutnaSimulacijaId);
+			loto.resumeSimulation();
+		}
+	}
+	
+	public void nextStep() {
+		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		Loto loto=null;
+		Map map=(Map)session.getAttribute("simulacija");
+		if (map != null) {
+			loto=(Loto) map.get(trenutnaSimulacijaId);
+			loto.nextStep();
+		}
+	}
+
+	public StreamedContent getFile() {
+		
+		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		Loto loto=null;
+		Map map=(Map)session.getAttribute("simulacija");
+		if (map != null) {
+			
+			try {
+				loto=(Loto) map.get(trenutnaSimulacijaId);
+				FileInputStream is=new FileInputStream(loto.getResultFile().getFile());
+//				InputStream stream = ((ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream("/resources/demo/images/optimus.jpg");
+				file = new DefaultStreamedContent(is, "txt","simulation_results.txt");
+				return file;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}
+		return null;
+		
+	}
+
 }

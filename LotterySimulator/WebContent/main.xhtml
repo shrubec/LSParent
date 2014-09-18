@@ -25,7 +25,7 @@
 		<div id="wrapper">
 	<div id="logo">
 		<h1>Lottery Simulator</h1>
-<!-- 		<p><em> nice company slogan here<a href="http://www.freecsstemplates.org/"></a></em></p> -->
+		<p><em> developed by sasa></em></p>
 	</div>
 	<hr />
 	<!-- end #logo -->
@@ -80,6 +80,11 @@
 		
 		
 		<ui:include src="simulacija.xhtml" />
+		
+		
+		<p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
+		    <p:graphicImage name="/demo/images/ajaxloadingbar.gif" />
+		</p:dialog>
 		
 		<!-- 
 			<div class="post">

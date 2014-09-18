@@ -1,5 +1,8 @@
 package loto;
 
+import hr.shrubec.simulacija.util.SimulacijaResultFile;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -19,12 +22,14 @@ public class Izvlacenje {
 	private Date datum;
 	private List<Listic> listici=new ArrayList<Listic>();
 	private Set<Broj> izvucenaKombinacija=new TreeSet<Broj>();	
+	private SimulacijaResultFile resultFile=null;
 
 	
-	public Izvlacenje (int kolo,Date datum,List<Listic> listici) {
+	public Izvlacenje (int kolo,Date datum,List<Listic> listici,SimulacijaResultFile resultFile) {
 		this.kolo=kolo;
 		this.datum=datum;
 		this.listici=listici;
+		this.resultFile=resultFile;
 	}
 	
 	public void izvuci(int brojeva, int odBrojeva,RanMT ranMT) {
@@ -42,6 +47,12 @@ public class Izvlacenje {
 	
 	@SuppressWarnings("unchecked")
 	public void provjeriRezultate() {
+		
+		try {
+			resultFile.appendIzvuceno(izvucenaKombinacija,kolo,datum);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		List<Listic> provjereniListici=new ArrayList<Listic>();
 		for (Listic listic:listici) {
@@ -66,10 +77,21 @@ public class Izvlacenje {
 				}
 				
 				zaokruzeneKombinacije.put(key, zaokruzeno);	
+				
+				try {
+					resultFile.appendOdigrano(zaokruzeno);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}	
 			
 			listic.setKombinacije(zaokruzeneKombinacije);	
 			provjereniListici.add(listic);	
+			
+			
+			
+			
+			
 		}		
 		this.listici=provjereniListici;		
 		

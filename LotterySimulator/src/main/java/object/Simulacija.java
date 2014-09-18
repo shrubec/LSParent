@@ -11,15 +11,15 @@ public class Simulacija {
 //	public static final Integer SIMULACIJA_VRSTA_590=3;
 //	public static final Integer SIMULACIJA_VRSTA_CUSTOM=10;
 //	
-	public static final Integer SIMULACIJA_TIPIGRE_LOTOKLAS=1;
-	public static final Integer SIMULACIJA_TIPIGRE_LOTOSIS=2;
-	public static final Integer SIMULACIJA_TIPIGRE_LOTOKLA=3;
-	
-	public static final Integer SIMULACIJA_TIPBROJEVA_AUTOMATSKI=1;
+//	public static final Integer SIMULACIJA_TIPIGRE_LOTOKLAS=1;
+//	public static final Integer SIMULACIJA_TIPIGRE_LOTOSIS=2;
+//	public static final Integer SIMULACIJA_TIPIGRE_LOTOKLA=3;
+//	
+//	public static final Integer SIMULACIJA_TIPBROJEVA_AUTOMATSKI=1;
 	public static final Integer SIMULACIJA_TIPBROJEVA_UNOS=2;
 	
 	
-	private Integer vrsta;
+	private Integer vrsta=11;
 	private Integer tipIgre;
 	private Integer tipBrojeva;
 	private Integer brojeva=7;

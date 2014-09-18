@@ -36,7 +36,7 @@ function loadXMLDoc() {
 
 
 	if (finished == 'true') {
-		alert ('finished: ' + finished);
+		//alert ('finished: ' + finished);
 		finish();
 	}	
 	
@@ -105,9 +105,11 @@ xmlhttp.onreadystatechange=function()
 
 var trenutnaSimulacija=document.getElementById("mainForm:trenutnaSimulacija").value;
 
-xmlhttp.open("GET","Updater?trenutnaSimulacija="+trenutnaSimulacija,true);
+//random: IE cashira ajax request pa mu svaki puta treba promijeniti url, varijabla nema utjecaja na updatera
+xmlhttp.open("GET","Updater?trenutnaSimulacija="+trenutnaSimulacija+ "&random=" + Math.random(),true);
 //xmlhttp.open("GET","simulacija.jsp?trenutnaSimulacija="+trenutnaSimulacija,true);
 xmlhttp.send();
+
 
 
 }
@@ -121,3 +123,24 @@ function sleep(milliseconds) {
 	  }
 	}
 
+
+function pauseSimulation() {
+	clearInterval(startInterval);
+}
+
+function resumeSimulation() {
+	start();
+}
+
+function nextDraw() {
+	loadXMLDocPojedinacno();
+}
+
+
+function showDialog() {
+    PF('statusDialog').show();
+}
+ 
+function hideDialog() {
+    PF('statusDialog').hide();
+}
