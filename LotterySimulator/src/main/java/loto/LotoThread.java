@@ -15,7 +15,7 @@ public class LotoThread extends Thread{
 	 public void run() {
 	        System.out.println("Hello from a thread!");
 	        
-	        loto.kombinacije(5000, listaKombinacija);
+	        loto.kombinacije(listaKombinacija);
 	        
 	        
 	        

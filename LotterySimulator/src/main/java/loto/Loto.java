@@ -13,7 +13,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+
+import org.primefaces.context.RequestContext;
 
 import listic.Broj;
 import listic.Listic;
@@ -33,6 +37,7 @@ public class Loto {
 	private int odBrojeva;
 	
 	private String simulacijaId;
+	private Integer trenutnoKoloBroj=1;
 	private KoloDO trenutnoKolo;
 	private boolean finished=false;
 	private boolean savedAsFinished=false;
@@ -50,10 +55,14 @@ public class Loto {
 	private int trajanjeGodina=10;
 	private Calendar startTime;
 	private boolean paused=false;
-	private boolean nextStepActivated=false;
+//	private boolean nextStepActivated=false;
 	private SimulacijaResultFile resultFile;
 	
+	
+	private List<List<Integer>> kombinacijeBrojeva;
 	private HttpSession session;
+	
+	
 	
 	
 	public Loto(HttpSession session,String simulacijaId,int brojeva, int odBrojeva,int trajanjeGodina,List<String> izvlacenja) {
@@ -101,11 +110,102 @@ public class Loto {
 
 	}
 	
-	public void kombinacije(int brojKola,List<List<Integer>> kombinacijeBrojeva) {
+//	public void kombinacije(int brojKola,List<List<Integer>> kombinacijeBrojeva) {
+//		
+//		int i=1;
+//		while(true) {
+//			
+//			Calendar cal=Calendar.getInstance();
+//			try {
+//				cal.setTimeInMillis(session.getLastAccessedTime());
+//			} catch (IllegalStateException e1) {
+//				LOGGER.info("Sesija unistena");
+//				brojKola=0;
+//				finished=true;
+//				return;
+//			}
+//			
+//			Calendar cal1=Calendar.getInstance();
+//			
+//			if ((cal1.getTimeInMillis() - cal.getTimeInMillis()) > 5000) {
+//				try {
+//					session.invalidate();
+//				} catch (IllegalStateException e) {
+//					e.printStackTrace();
+//				}
+//				brojKola=0;
+//				finished=true;
+//				return;
+//			}
+//			
+//			if (paused) {
+//				try {
+//					Thread.sleep(500);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				continue;
+//			}
+//			
+//			
+//			
+//			if (this.speed == 0) {
+//				this.speed=10;
+//			}
+//			
+//			try {
+//				Thread.sleep(this.speed);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//			
+//			
+//			List<Listic> listici=new ArrayList<Listic>();
+//			for (List<Integer> brojevi:kombinacijeBrojeva) {
+//				
+//				Listic listic=new Listic(false);				
+//				Set<Broj> kombinacija=new TreeSet<Broj>();
+//				for (Integer broj:brojevi) {
+//					kombinacija.add(new Broj(broj));				
+//				}
+//		
+//				listic.dodajKombinaciju(kombinacija);
+//				listici.add(listic);
+//			}
+//
+//			odigraj(i,listici);		
+//			
+//			if (jackpot) {
+//				this.finished=true;
+//				LOGGER.info("JACKPOT!!!");
+//				resultFile.closeFile();
+//				return;
+//				
+//			}
+//			
+//			
+//			if (this.cal.get(Calendar.YEAR) > (startTime.get(Calendar.YEAR) + trajanjeGodina)) {
+//				this.finished=true;
+//				
+//				String message="Simulation finished!";
+//				LOGGER.info(message);
+//				resultFile.closeFile();
+//				return;
+//			}
+//		
+//			i++;
+//			
+//			if (nextStepActivated) {
+//				paused=true;
+//			}
+//		}
+//	}
+	
+	
+	public void kombinacije(List<List<Integer>> kombinacijeBrojeva) {
 		
-//		for (int i=1; i <=brojKola; i++) {	
+		this.kombinacijeBrojeva=kombinacijeBrojeva;
 		
-		int i=1;
 		while(true) {
 			
 			Calendar cal=Calendar.getInstance();
@@ -113,7 +213,6 @@ public class Loto {
 				cal.setTimeInMillis(session.getLastAccessedTime());
 			} catch (IllegalStateException e1) {
 				LOGGER.info("Sesija unistena");
-				brojKola=0;
 				finished=true;
 				return;
 			}
@@ -126,7 +225,6 @@ public class Loto {
 				} catch (IllegalStateException e) {
 					e.printStackTrace();
 				}
-				brojKola=0;
 				finished=true;
 				return;
 			}
@@ -140,8 +238,6 @@ public class Loto {
 				continue;
 			}
 			
-			
-			
 			if (this.speed == 0) {
 				this.speed=10;
 			}
@@ -153,76 +249,76 @@ public class Loto {
 			}
 			
 			
-			List<Listic> listici=new ArrayList<Listic>();
-			for (List<Integer> brojevi:kombinacijeBrojeva) {
-				
-				Listic listic=new Listic(false);				
-				Set<Broj> kombinacija=new TreeSet<Broj>();
-				for (Integer broj:brojevi) {
-					kombinacija.add(new Broj(broj));				
-				}
-		
-				listic.dodajKombinaciju(kombinacija);
-				listici.add(listic);
-			}
-
-			odigraj(i,listici);		
+			kombinacijePojedinacno();
 			
-			if (jackpot) {
-				this.finished=true;
-				LOGGER.info("JACKPOT!!!");
-				resultFile.closeFile();
-				return;
-				
-			}
-			
-			
-			if (this.cal.get(Calendar.YEAR) > (startTime.get(Calendar.YEAR) + trajanjeGodina)) {
-				this.finished=true;
-				LOGGER.info("Simulacija istekla");
-				messagesList.add("Simulation finished!");
-				resultFile.closeFile();
-				return;
-			}
-		
-			i++;
-			
-			if (nextStepActivated) {
-				paused=true;
-			}
+//			if (nextStepActivated) {
+//				paused=true;
+//			}
 		}
+	}
+	
+	public void kombinacijePojedinacno() {
+		
+		List<Listic> listici=new ArrayList<Listic>();
+		for (List<Integer> brojevi:kombinacijeBrojeva) {
 			
-//		LOGGER.info("simulacija završena!!!!");
-//		this.finished=true;
+			Listic listic=new Listic(false);				
+			Set<Broj> kombinacija=new TreeSet<Broj>();
+			for (Integer broj:brojevi) {
+				kombinacija.add(new Broj(broj));				
+			}
+	
+			listic.dodajKombinaciju(kombinacija);
+			listici.add(listic);
+		}
+
+		odigraj(trenutnoKoloBroj,listici);		
+		
+		if (jackpot) {
+			this.finished=true;
+			LOGGER.info("JACKPOT!!!");
+			resultFile.closeFile();
+			return;
+			
+		}
+		
+		
+		if (this.cal.get(Calendar.YEAR) > (startTime.get(Calendar.YEAR) + trajanjeGodina)) {
+			this.finished=true;
+			
+			String message="Simulation finished!";
+			LOGGER.info(message);
+			resultFile.closeFile();
+			return;
+		}
+	
+		trenutnoKoloBroj++;
 	}
 	
 	
 	
-	
-	
-	
-	
-	public void kombinacijePojedinacno(int izvlacenje,int brojKola,List<List<Integer>> kombinacijeBrojeva) {
-		
-		this.finished=false;
-		if (izvlacenje <= brojKola) {
-			List<Listic> listici=new ArrayList<Listic>();
-			for (List<Integer> brojevi:kombinacijeBrojeva) {
-				
-				Listic listic=new Listic(false);				
-				Set<Broj> kombinacija=new TreeSet<Broj>();
-				for (Integer broj:brojevi) {
-					kombinacija.add(new Broj(broj));				
-				}
-		
-				listic.dodajKombinaciju(kombinacija);
-				listici.add(listic);
-			}
-
-			odigraj(izvlacenje,listici);	
-		}
-
-	}
+//	
+//	public void kombinacijePojedinacno(int izvlacenje,int brojKola,List<List<Integer>> kombinacijeBrojeva) {
+//		
+//		this.finished=false;
+//		if (izvlacenje <= brojKola) {
+//			List<Listic> listici=new ArrayList<Listic>();
+//			for (List<Integer> brojevi:kombinacijeBrojeva) {
+//				
+//				Listic listic=new Listic(false);				
+//				Set<Broj> kombinacija=new TreeSet<Broj>();
+//				for (Integer broj:brojevi) {
+//					kombinacija.add(new Broj(broj));				
+//				}
+//		
+//				listic.dodajKombinaciju(kombinacija);
+//				listici.add(listic);
+//			}
+//
+//			odigraj(izvlacenje,listici);	
+//		}
+//
+//	}
 	
 	public void kombinacijeRandom(int brojKola,int listicaUKolu,int brojKombinacija) {
 		
@@ -493,12 +589,13 @@ public class Loto {
 	
 	public void resumeSimulation() {
 		this.paused=false;
-		nextStepActivated=false;
+//		nextStepActivated=false;
 	}
 	
 	public void nextStep() {
-		nextStepActivated=true;
-		paused=false;
+//		nextStepActivated=true;
+//		paused=false;
+		kombinacijePojedinacno();
 	}
 	
 	public void deleteFile() {

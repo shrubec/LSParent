@@ -175,7 +175,7 @@ public class Main {
 		listaKombinacija.add(lista);
 		
 
-		loto.kombinacije(1000, listaKombinacija);
+//		loto.kombinacije(1000, listaKombinacija);
 	}
 	
 	

@@ -16,6 +16,7 @@
           
          <h:form id="mainForm">  
          
+         <p:messages id="messages"  />
          
          <p:outputPanel rendered="#{simulacijaFacade.simulationStarted == false}">
 		
@@ -41,13 +42,20 @@
 	
 		   </p:outputPanel>
 		   
-		     <p:outputPanel id="sliderPanel" style="width:658px"  rendered="#{simulacijaFacade.simulationStarted == true}">  		
-					
-					<p:outputLabel value="Simulation speed"/>
-        			<p:slider for="simulationSpeed" step="10" />  
-                 
-						
+		   <p:outputPanel id="buttonPanel" rendered="#{simulacijaFacade.simulationStarted == true}" >  	
+		   <p:spacer />
+		    		<h2>Simulation speed </h2>
+		    	 	<h:panelGrid   columns="4" columnClasses="label, value" styleClass="grid"  >  
+        			<p:slider for="simulationSpeed" step="10" style="width: 300px"/>  
+			     	<p:commandButton id="submitButton02" update="mainForm" rendered="#{simulacijaFacade.simulationPaused == false}" value="Pause"  action="#{simulacijaFacade.pauseSimulation}"  onsuccess="javascript:pauseSimulation();" icon="ui-icon-pause" style="font-size: 75% !important;width:90px"/> 
+	                <p:commandButton id="submitButton03" update="mainForm" rendered="#{simulacijaFacade.simulationPaused == true}" value="Resume"  action="#{simulacijaFacade.resumeSimulation}"  onsuccess="javascript:resumeSimulation();" icon="ui-icon-play" style="font-size: 75% !important;width:90px"/> 
+	                <p:commandButton id="submitButton04" update="mainForm" disabled="#{simulacijaFacade.simulationPaused == false}" value="Next draw"  action="#{simulacijaFacade.nextStep}"   icon="ui-icon-seek-next" style="font-size: 75% !important;width:100px"/>
+					 <p:commandButton value="Download results" ajax="false" onclick="PrimeFaces.monitorDownload(showDialog,hideDialog);" icon="ui-icon-arrowthick-1-s"  style="font-size: 75% !important;width:140px">
+				        <p:fileDownload value="#{simulacijaFacade.file}" />
+				    </p:commandButton>
+			    </h:panelGrid>
 		   </p:outputPanel>
+		   
    
             <p:outputPanel id="headerPanel" style="width:658px" rendered="#{simulacijaFacade.simulationStarted == false}">  
 
@@ -150,13 +158,10 @@
 				</h:panelGrid>
 
 			    
-				<p:commandButton id="submitButton01" value="Start simulation" update="mainForm" action="#{simulacijaFacade.pokreniSimulaciju}"  onsuccess="javascript:start();"/> 
+				<p:commandButton id="submitButton01" value="Start simulation" update="mainForm" action="#{simulacijaFacade.pokreniSimulaciju}"  /> 
                  
-                 
-                
-
 				
- 				<p:messages id="messages"  />   
+ 				   
   				
 
                 
@@ -169,13 +174,7 @@
 			<p:pieChart id="chart1" value="#{simulacijaFacade.pieModel}" legendPosition="w"  style="width:650px;height:300px" showDataLabels="true" />  
                  
                  
-                 <p:commandButton id="submitButton02" update="mainForm" rendered="#{simulacijaFacade.simulationPaused == false}" value="Pause simulation"  action="#{simulacijaFacade.pauseSimulation}"  onsuccess="javascript:pauseSimulation();" icon="ui-icon-pause"/> 
-                <p:commandButton id="submitButton03" update="mainForm" rendered="#{simulacijaFacade.simulationPaused == true}" value="Resume simulation"  action="#{simulacijaFacade.resumeSimulation}"  onsuccess="javascript:resumeSimulation();" icon="ui-icon-play"/> 
-                <p:commandButton id="submitButton04" update="mainForm" disabled="#{simulacijaFacade.simulationPaused == false}" value="Next draw"  action="#{simulacijaFacade.nextStep}"  onsuccess="javascript:nextDraw();" icon="ui-icon-seek-next"/>
-	 	
-				 <p:commandButton value="Download simulation results" ajax="false" onclick="PrimeFaces.monitorDownload(showDialog,hideDialog);" icon="ui-icon-arrowthick-1-s">
-			        <p:fileDownload value="#{simulacijaFacade.file}" />
-			    </p:commandButton>
+               
 	 	
 	 	</p:outputPanel>
  
@@ -183,7 +182,7 @@
 
  
  		<p:growl id="simulationMessage" showDetail="true" sticky="true" globalOnly="true" />  
-  		<p:poll interval="5" listener="#{simulacijaFacade.displaySimulationMessage}" update="simulationMessage"/>  
+  		<p:poll interval="5" listener="#{simulacijaFacade.displaySimulationMessage}" update="simulationMessage" rendered="#{simulacijaFacade.simulationStarted == true}"/>  
       
       
 </h:form>  
@@ -191,10 +190,7 @@
               
         </h:body>  
         
-        
         <div id="myDiv"></div>
-        
-		
         
         
         

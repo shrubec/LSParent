@@ -3,9 +3,7 @@ package facade;
 import hr.shrubec.simulacija.bean.SimulacijaBean;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +19,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -31,7 +28,7 @@ import object.Kombinacija;
 import object.OdigraniBrojevi;
 import object.Simulacija;
 
-import org.primefaces.event.FlowEvent;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.chart.PieChartModel;
@@ -107,23 +104,23 @@ public class SimulacijaFacade {
 
 
 
-	public String onFlowProcess(FlowEvent event) {  
-       
-       if (event.getNewStep().equals("rezultati"))
-    	   validiraj();
-       
-        if(skip) {  
-            skip = false;   //reset in case user goes back  
-            return "confirm";  
-        }  
-        else {  
-            return event.getNewStep();  
-        }  
-        
-       
-        
-    }  
-	
+//	public String onFlowProcess(FlowEvent event) {  
+//       
+//       if (event.getNewStep().equals("rezultati"))
+//    	   validiraj();
+//       
+//        if(skip) {  
+//            skip = false;   //reset in case user goes back  
+//            return "confirm";  
+//        }  
+//        else {  
+//            return event.getNewStep();  
+//        }  
+//        
+//       
+//        
+//    }  
+//	
 	 public boolean isSkip() {  
 	        return skip;  
 	 }   
@@ -323,6 +320,7 @@ public class SimulacijaFacade {
 			for (int i=0; i < kombinacijaZaIspuniti; i++) {
 				if (!validirajKombinaciju(i))
 					success=false;
+					
 			}	
 			
 			if (success) {
@@ -402,7 +400,7 @@ public class SimulacijaFacade {
 			if (lista.size() > 0 && lista.size() != simulacija.getBrojeva().intValue()) {
 				
 				String poruka="Ticket " + (kombinacija+1) + ": please select " + simulacija.getBrojeva() + " numbers";
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, poruka, poruka));
+				FacesContext.getCurrentInstance().addMessage(":messages", new FacesMessage(FacesMessage.SEVERITY_ERROR, poruka, poruka));
 				return false;
 			}	
 		} catch (Exception e) {
@@ -475,6 +473,8 @@ public class SimulacijaFacade {
 			LotoThread thread=new LotoThread(loto,listaKombinacija);
 			thread.start();
 			simulationStarted=true;
+			
+			RequestContext.getCurrentInstance().execute("start();");
 		}
 		 
 		
@@ -495,6 +495,7 @@ public class SimulacijaFacade {
 			if (loto.isFinished() && !loto.isSavedAsFinished()) {
 				simulacijaBean.zavrsiSimulaciju(trenutnaSimulacijaId, false);
 				loto.setSavedAsFinished(true);
+				RequestContext.getCurrentInstance().execute("alert('Simulation finished!')");
 			}
 			return new Boolean(loto.isFinished()).toString();
 		}
@@ -572,34 +573,34 @@ public class SimulacijaFacade {
 		this.pieModel = pieModel; 
 	}
 	
-	public void odigrajPojedinacno() {
-		
-		if (pojedinacno == 1)
-			validiraj();
-		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-		
-		Loto loto=null;
-		Map map=(Map)session.getAttribute("simulacija");
-		if (map != null)
-			loto=(Loto) map.get(trenutnaSimulacijaId);
-		
-
-		if (loto != null) {
-			loto.kombinacijePojedinacno(pojedinacno, 5000, listaKombinacija);
-		}
-			
-		pojedinacno++;
-		
-		mainVisible=false;
-		simulacijaVisible=true;
-			
-	}
-	
-	
-	public void next() {
-		validiraj();
-	}
-	
+//	public void odigrajPojedinacno() {
+//		
+//		if (pojedinacno == 1)
+//			validiraj();
+//		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+//		
+//		Loto loto=null;
+//		Map map=(Map)session.getAttribute("simulacija");
+//		if (map != null)
+//			loto=(Loto) map.get(trenutnaSimulacijaId);
+//		
+//
+//		if (loto != null) {
+//			loto.kombinacijePojedinacno(pojedinacno, 5000, listaKombinacija);
+//		}
+//			
+//		pojedinacno++;
+//		
+//		mainVisible=false;
+//		simulacijaVisible=true;
+//			
+//	}
+//	
+//	
+//	public void next() {
+//		validiraj();
+//	}
+//	
 	public void noviBrojevi() {
 		HttpServletResponse response=(HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 		try {
@@ -709,6 +710,8 @@ public class SimulacijaFacade {
 		if (map != null) {
 			loto=(Loto) map.get(trenutnaSimulacijaId);
 			loto.nextStep();
+			loto.kombinacijePojedinacno();
+			RequestContext.getCurrentInstance().execute("nextDraw();");
 		}
 	}
 
