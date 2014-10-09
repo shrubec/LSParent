@@ -91,6 +91,14 @@ public class Updater extends HttpServlet {
 		out.println("<LINK REL=StyleSheet HREF='tableStyle.css' TYPE='text/css'>");
 		out.println("</head>");
 		
+		if (map != null) {
+			Loto loto=(Loto) map.get(trenutnaSimulacijaId);
+			if (loto != null && loto.isFinished()) {
+				out.println("&nbsp; <h2> <font color='009900'> Simulation finished! </font> </h2>");
+			}
+		}
+		
+		
 		out.println("<table id='gradient-style'>");
 		
 		

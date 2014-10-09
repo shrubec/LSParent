@@ -495,7 +495,7 @@ public class SimulacijaFacade {
 			if (loto.isFinished() && !loto.isSavedAsFinished()) {
 				simulacijaBean.zavrsiSimulaciju(trenutnaSimulacijaId, false);
 				loto.setSavedAsFinished(true);
-				RequestContext.getCurrentInstance().execute("alert('Simulation finished!')");
+//				RequestContext.getCurrentInstance().execute("alert('Simulation finished!')");
 			}
 			return new Boolean(loto.isFinished()).toString();
 		}
@@ -690,6 +690,10 @@ public class SimulacijaFacade {
 			loto=(Loto) map.get(trenutnaSimulacijaId);
 			loto.pauseSimulation();
 		}
+	}
+	
+	public void restartSimulation() {
+		pokreniSimulaciju();
 	}
 	
 	public void resumeSimulation() {

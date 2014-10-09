@@ -57,6 +57,7 @@ public class Loto {
 	private boolean paused=false;
 //	private boolean nextStepActivated=false;
 	private SimulacijaResultFile resultFile;
+	private boolean fileClosed=false;
 	
 	
 	private List<List<Integer>> kombinacijeBrojeva;
@@ -242,6 +243,9 @@ public class Loto {
 				this.speed=10;
 			}
 			
+//			System.out.println("Speed: " + speed);
+			
+			
 			try {
 				Thread.sleep(this.speed);
 			} catch (InterruptedException e) {
@@ -258,6 +262,10 @@ public class Loto {
 	}
 	
 	public void kombinacijePojedinacno() {
+		
+		if (this.finished == true) {
+			return;
+		}
 		
 		List<Listic> listici=new ArrayList<Listic>();
 		for (List<Integer> brojevi:kombinacijeBrojeva) {
@@ -286,9 +294,13 @@ public class Loto {
 		if (this.cal.get(Calendar.YEAR) > (startTime.get(Calendar.YEAR) + trajanjeGodina)) {
 			this.finished=true;
 			
-			String message="Simulation finished!";
-			LOGGER.info(message);
-			resultFile.closeFile();
+			if (!fileClosed) {
+				String message="Simulation finished!";
+				LOGGER.info(message);
+				resultFile.closeFile();
+				fileClosed=true;
+			}
+			
 			return;
 		}
 	

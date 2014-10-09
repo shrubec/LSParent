@@ -50,6 +50,7 @@
 			     	<p:commandButton id="submitButton02" update="mainForm" rendered="#{simulacijaFacade.simulationPaused == false}" value="Pause"  action="#{simulacijaFacade.pauseSimulation}"  onsuccess="javascript:pauseSimulation();" icon="ui-icon-pause" style="font-size: 75% !important;width:90px"/> 
 	                <p:commandButton id="submitButton03" update="mainForm" rendered="#{simulacijaFacade.simulationPaused == true}" value="Resume"  action="#{simulacijaFacade.resumeSimulation}"  onsuccess="javascript:resumeSimulation();" icon="ui-icon-play" style="font-size: 75% !important;width:90px"/> 
 	                <p:commandButton id="submitButton04" update="mainForm" disabled="#{simulacijaFacade.simulationPaused == false}" value="Next draw"  action="#{simulacijaFacade.nextStep}"   icon="ui-icon-seek-next" style="font-size: 75% !important;width:100px"/>
+					
 					 <p:commandButton value="Download results" ajax="false" onclick="PrimeFaces.monitorDownload(showDialog,hideDialog);" icon="ui-icon-arrowthick-1-s"  style="font-size: 75% !important;width:140px">
 				        <p:fileDownload value="#{simulacijaFacade.file}" />
 				    </p:commandButton>

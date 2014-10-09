@@ -18,6 +18,7 @@ public class SimulacijaResultFile {
 	
 	public SimulacijaResultFile(String filename) {
 		 file = new File("C:\\"+filename+".txt");
+//		 file = new File("//home/simulacije//"+filename+".txt");
 		 try {
 			output = new BufferedWriter(new FileWriter(file));
 		} catch (IOException e) {
@@ -93,16 +94,19 @@ public class SimulacijaResultFile {
 	
 	public void deleteFile() throws IOException {
 		boolean deleted=false;
-		try {
+		if (file.exists()) {
 			closeFile();
-			output = null;
-			System.gc();
-			deleted=file.delete();
-		} catch (Exception e) {
-			System.out.println("GRESKA KOD BRISANJA");
-			e.printStackTrace();
+			try {
+				output = null;
+				System.gc();
+				deleted=file.delete();
+			} catch (Exception e) {
+				System.out.println("GRESKA KOD BRISANJA");
+				e.printStackTrace();
+			}
+			System.out.println("DELETED: " + deleted);
 		}
-		System.out.println("DELETED: " + deleted);
+		
 	}
 
 

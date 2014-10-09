@@ -32,6 +32,7 @@ public class KontaktFacade {
 		kontakt.setEmail(email);
 		kontakt.setName(name);
 		kontakt.setMessage(message);
+		
 		simulacijaBean.saveKontakt(kontakt);
 		
 		FacesMessage msg = new FacesMessage("Your message has been sent!", "Your message has been sent!");  

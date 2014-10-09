@@ -1,7 +1,11 @@
 package hr.shrubec.simulacija.bean;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -22,11 +26,47 @@ public class SimulacijaBean {
 
 	
 	public void saveKontakt(Kontakt kontakt) {
-		em.persist(kontakt);
+//		em.persist(kontakt);
+		
+		 File file = new File("C:\\kontakt.txt");
+//		 File file = new File("//home//poruke//kontakt.txt");
+		 BufferedWriter output=null;
+		 try {
+			output = new BufferedWriter(new FileWriter(file,true));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 
+		 SimpleDateFormat sdf=new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		 try {
+			output.write(System.getProperty("line.separator")); 
+			output.write(System.getProperty("line.separator")); 
+			output.write("----------------------------------------"); 
+			output.write(System.getProperty("line.separator")); 
+			output.write("DATE: "+sdf.format(new Date()));
+			output.write(System.getProperty("line.separator")); 
+			output.write("NAME: "+kontakt.getName());
+			output.write(System.getProperty("line.separator")); 
+			output.write("EMAIL: "+kontakt.getEmail());
+			output.write(System.getProperty("line.separator")); 
+			output.write("MESSAGE: ");
+			output.write(System.getProperty("line.separator")); 
+			output.write(kontakt.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 
+		try {
+			output.flush();
+			output.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		 
 	}
 	
 	public void saveSimulacija(Simulacija simulacija) {
-		em.persist(simulacija);
+//		em.persist(simulacija);
 	}
 	
 	public List<Simulacija> getSimulacije() {
@@ -54,14 +94,14 @@ public class SimulacijaBean {
 	}
 	
 	public void zavrsiSimulaciju(String hash,boolean jackpot) {
-		Simulacija simulacija=(Simulacija)em.createQuery("select o from Simulacija o where o.hash = :hash").setParameter("hash", hash).getSingleResult();
-		Calendar cal0=Calendar.getInstance();
-		cal0.setTime(simulacija.getStartTime());
-		Calendar cal=Calendar.getInstance();
-		simulacija.setEndTime(cal.getTime());
-		Long duration=new Long(cal.getTimeInMillis()-cal0.getTimeInMillis());
-		simulacija.setDuration(duration.intValue()/1000);
-		simulacija.setJackpot(jackpot);
-		em.merge(simulacija);
+//		Simulacija simulacija=(Simulacija)em.createQuery("select o from Simulacija o where o.hash = :hash").setParameter("hash", hash).getSingleResult();
+//		Calendar cal0=Calendar.getInstance();
+//		cal0.setTime(simulacija.getStartTime());
+//		Calendar cal=Calendar.getInstance();
+//		simulacija.setEndTime(cal.getTime());
+//		Long duration=new Long(cal.getTimeInMillis()-cal0.getTimeInMillis());
+//		simulacija.setDuration(duration.intValue()/1000);
+//		simulacija.setJackpot(jackpot);
+//		em.merge(simulacija);
 	}
 }

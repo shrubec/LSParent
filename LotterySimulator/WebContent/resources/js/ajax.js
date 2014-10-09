@@ -10,12 +10,15 @@ function start() {
       
 function setSpeed() {
 	var speed=document.getElementById("mainForm:simulationSpeed").value;
-	milisec=100-speed;
+	milisec=110-speed;
 	milisec=milisec*2;
 	
 	if (speed == 0) {
 		milisec=500;
 	}
+	
+	
+	console.log(milisec);
 	
 	//milisec=2000;
 	
