@@ -18,7 +18,7 @@ function setSpeed() {
 	}
 	
 	
-	console.log(milisec);
+//	console.log(milisec);
 	
 	//milisec=2000;
 	
