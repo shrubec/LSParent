@@ -94,7 +94,10 @@ public class Updater extends HttpServlet {
 		if (map != null) {
 			Loto loto=(Loto) map.get(trenutnaSimulacijaId);
 			if (loto != null && loto.isFinished()) {
-				out.println("&nbsp; <h2> <font color='009900'> Simulation finished! </font> </h2>");
+				if (loto.isJackpot())
+					out.println("&nbsp; <h2> <font color='009900'> Simulation finished! Jackpot winned! </font> </h2>");
+				else
+					out.println("&nbsp; <h2> <font color='009900'> Simulation finished! </font> </h2>");
 			}
 		}
 		

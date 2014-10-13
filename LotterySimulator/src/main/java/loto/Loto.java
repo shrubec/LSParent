@@ -623,6 +623,15 @@ public class Loto {
 	public SimulacijaResultFile getResultFile() {
 		return resultFile;
 	}
+
+	public boolean isJackpot() {
+		return jackpot;
+	}
+
+	public void setJackpot(boolean jackpot) {
+		this.jackpot = jackpot;
+	}
+	
 	
 	
 }
