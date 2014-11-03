@@ -730,7 +730,7 @@ public class SimulacijaFacade {
 				loto=(Loto) map.get(trenutnaSimulacijaId);
 				FileInputStream is=new FileInputStream(loto.getResultFile().getFile());
 //				InputStream stream = ((ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream("/resources/demo/images/optimus.jpg");
-				file = new DefaultStreamedContent(is, "txt","simulation_results.txt");
+				file = new DefaultStreamedContent(is, "text/plain","simulation_results.txt");
 				return file;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

@@ -493,7 +493,6 @@ public class Loto {
 				}
 				
 				if (listic.getBrojPogodjenihUKombinaciji(key).intValue() >= (brojeva - 1)) {
-					jackpot=true;
 					messagesList.add( sdf.format(izvlacenje.getDatum()) + " Jackpot missed by one number!");
 				}
 				

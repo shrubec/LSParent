@@ -1,19 +1,5 @@
 
 
-- prevesti tablicu simulacija na engleski, eventualno proširiti tablice
-- dodati podršku za više tipova lota
-- istaknuti trenutno pogoðene brojeve (ovo možda i netreba)
-- pravilno završiti simulaciju
-- izbaciti pretražiaè sa forme
-- doraditi poruke greške
-- download rezultata simulacije???
-
-- odabrati i zakupiti server, pripremiti okolinu, instalirati aplikaciju
-- testirati aplikaciju
-- prijaviti googleu i prilagoditi aplikaciju googleu
-
-
-
 create table kontakt (
 id int not null auto_increment primary key,
 date datetime not null,

@@ -24,7 +24,7 @@ import loto.Loto;
 public class Updater extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	private static SimpleDateFormat sdf=new SimpleDateFormat("dd.MM.yyyy");
+	private static SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 	
     /**
      * @see HttpServlet#HttpServlet()

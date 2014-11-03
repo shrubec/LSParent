@@ -7,6 +7,9 @@ body {
 	color: #000;
 }
 
+.errorDiv {height: 60px; background: url('images/error.jpg') no-repeat left top;}
+.errorDivMessage {float:left; height:50px; margin-top:5px;margin-left: 45px;}
+
 h1, h2, h3 {
 	margin: 0;
 	font-family: Arial, Helvetica, sans-serif;

@@ -11,4 +11,21 @@
     <param-value>true</param-value>
 </context-param>
 
+<welcome-file-list>
+<welcome-file>simulation.jsf</welcome-file>
+</welcome-file-list>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error_page.jsf</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error_page.jsf</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error_page.jsf</location>
+	</error-page>
+
 </web-app>

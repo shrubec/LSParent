@@ -17,8 +17,8 @@ public class SimulacijaResultFile {
 	private SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 	
 	public SimulacijaResultFile(String filename) {
-		 file = new File("C:\\"+filename+".txt");
-//		 file = new File("//home/simulacije//"+filename+".txt");
+//		 file = new File("C:\\"+filename+".txt");
+		 file = new File("//home/simulator//simulacije//"+filename+".txt");
 		 try {
 			output = new BufferedWriter(new FileWriter(file));
 		} catch (IOException e) {
@@ -29,31 +29,36 @@ public class SimulacijaResultFile {
 
 
 	public void appendIzvuceno(Set<Broj> izvucenaKombinacija,Integer kolo,Date datum) throws IOException {
-		
-		output.write(System.getProperty("line.separator"));
-		output.write(System.getProperty("line.separator"));
+//		output.write(System.lineSeparator());
+//		output.write(System.lineSeparator());
+		output.write("\r\n");
+		output.write("\r\n");
+//		output.newLine();
+//		output.newLine();
 		output.write("-----------------------------------------------------------------------------------");
-		output.write(System.getProperty("line.separator"));
-		output.write(System.getProperty("line.separator"));
-		
+//		output.newLine();
+//		output.newLine();
+		output.write("\r\n");
+		output.write("\r\n");
 		output.write("Drawing " + kolo + ", " + sdf.format(datum));
 //		output.write(System.getProperty("line.separator"));
 //		output.write("----------------------------------------------------------");
-		output.write(System.getProperty("line.separator"));
+		output.write("\r\n");
 		output.write("Winning numbers: ");
 		String s="";
 		for (Broj broj:izvucenaKombinacija) {
 			s=s+broj.getBroj()+", ";
 		}
 		output.write(s.substring(0,s.lastIndexOf(",")));
-		output.write(System.getProperty("line.separator"));
+//		output.newLine();
+		output.write("\r\n");
 //		output.write("----------------------------------------------------------");
 		
 	}
 	
 	public void appendOdigrano(Set<Broj> zaokruzeno) throws IOException {
 		
-		output.write(System.getProperty("line.separator"));
+		output.newLine();
 		output.write("My numbers: ");
 		
 		String s="";

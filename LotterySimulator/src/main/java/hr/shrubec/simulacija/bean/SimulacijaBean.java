@@ -28,8 +28,8 @@ public class SimulacijaBean {
 	public void saveKontakt(Kontakt kontakt) {
 //		em.persist(kontakt);
 		
-		 File file = new File("C:\\kontakt.txt");
-//		 File file = new File("//home//poruke//kontakt.txt");
+//		 File file = new File("C:\\kontakt.txt");
+		 File file = new File("//home//simulator//kontakt.txt");
 		 BufferedWriter output=null;
 		 try {
 			output = new BufferedWriter(new FileWriter(file,true));
@@ -67,6 +67,27 @@ public class SimulacijaBean {
 	
 	public void saveSimulacija(Simulacija simulacija) {
 //		em.persist(simulacija);
+		BufferedWriter output=null;
+		try {
+//			File file = new File("C:\\simulacije_info.txt");
+			 File file = new File("//home/simulator//simulacije_info.txt");
+			output = new BufferedWriter(new FileWriter(file,true));
+			output.write("\r\n");
+			output.write(simulacija.getStartTime() + ", "
+					+ simulacija.getLotteryType() + ", "
+					+ simulacija.getSelectedDays() + ", "
+					+ simulacija.getSelectedNumbers());
+			output.write("\r\n");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				output.flush();
+				output.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public List<Simulacija> getSimulacije() {
