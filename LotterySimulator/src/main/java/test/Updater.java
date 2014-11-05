@@ -184,7 +184,7 @@ public class Updater extends HttpServlet {
 		out.println("<table id='gradient-style2' >");
 		
 		out.println("<tr>");
-		out.println("<th scope='col' colspan='2' >Statictics</th>");
+		out.println("<th scope='col' colspan='2' >Statistics</th>");
 		out.println("<tr>");
 		out.println("</tr>");
 		
